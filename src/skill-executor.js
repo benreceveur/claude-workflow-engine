@@ -13,6 +13,15 @@ const path = require('path');
 const { execSync } = require('child_process');
 const InputValidator = require('./validators/input-validator');
 const { logSkillExecution, logValidationFailure, logPathTraversalAttempt } = require('./logging/security-logger');
+const {
+    SkillError,
+    SkillErrorCode,
+    ValidationError,
+    SecurityError,
+    TimeoutError,
+    ConcurrencyError,
+    wrapError
+} = require('./errors/skill-error');
 
 /**
  * Executes Anthropic Skills with security validations and caching.
@@ -172,9 +181,9 @@ class SkillExecutor {
 
         // Security: Check concurrent execution limit
         if (this.activeExecutions.size >= this.maxConcurrentExecutions) {
-            throw new Error(
-                `Maximum concurrent executions reached (${this.maxConcurrentExecutions}). ` +
-                `Please wait for other Skills to complete.`
+            throw new ConcurrencyError(
+                this.maxConcurrentExecutions,
+                this.activeExecutions.size
             );
         }
 
@@ -195,7 +204,14 @@ class SkillExecutor {
             // 1. Validate Skill exists
             const skillPath = this.getSkillPath(sanitizedSkillName);
             if (!skillPath) {
-                throw new Error(`Skill '${sanitizedSkillName}' not found in ${this.skillsDir}`);
+                throw new SkillError(
+                    `Skill '${sanitizedSkillName}' not found`,
+                    SkillErrorCode.SKILL_NOT_FOUND,
+                    {
+                        skillName: sanitizedSkillName,
+                        searchPath: this.skillsDir
+                    }
+                );
             }
 
             // 2. Load Skill metadata
@@ -237,10 +253,14 @@ class SkillExecutor {
 
         } catch (error) {
             execution.success = false;
-            execution.error = {
-                message: error.message,
-                stack: error.stack
-            };
+
+            // Wrap error in SkillError if not already
+            const skillError = wrapError(error, {
+                skill: sanitizedSkillName,
+                operation: 'execute'
+            });
+
+            execution.error = skillError.toJSON().error;
         } finally {
             // Security: Always remove from active executions
             this.activeExecutions.delete(executionId);
