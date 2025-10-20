@@ -76,3 +76,4 @@ repositories/
 # OS
 Thumbs.db
 .DS_Store
+.nyc_output/
