@@ -1,21 +1,32 @@
 /**
- * Input Validation Framework
- *
- * Provides comprehensive input validation to prevent security vulnerabilities:
- * - Command injection
- * - Path traversal
- * - Prototype pollution
- * - Invalid skill names
- * - Malicious file paths
- *
+ * @fileoverview Input Validation Framework - Comprehensive validation for security.
+ * Prevents command injection, path traversal, prototype pollution, and other vulnerabilities.
  * @module validators/input-validator
+ * @author Claude Workflow Engine Team
+ * @version 1.0.0
  */
 
 const path = require('path');
 const fs = require('fs');
 
 /**
- * Input validator for all user-provided data
+ * Provides comprehensive input validation for all user-provided data.
+ *
+ * @class InputValidator
+ * @classdesc Static utility class for validating and sanitizing inputs to prevent
+ * security vulnerabilities including command injection, path traversal, prototype
+ * pollution, and malformed data. All methods are static and throw descriptive errors
+ * on validation failure.
+ *
+ * @example
+ * // Validate skill name
+ * const skillName = InputValidator.sanitizeSkillName('my-skill');
+ *
+ * // Validate file path
+ * const safePath = InputValidator.sanitizeFilePath('/path/to/file');
+ *
+ * // Sanitize context object
+ * const safeContext = InputValidator.sanitizeContext({ operation: 'scan' });
  */
 class InputValidator {
     /**

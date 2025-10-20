@@ -1,17 +1,59 @@
 #!/usr/bin/env node
 
+/**
+ * @fileoverview Repository Detector - Identifies and tracks Git repositories.
+ * Provides secure Git operations and repository memory management.
+ * @module repo-detector
+ * @author Claude Workflow Engine Team
+ * @version 1.0.0
+ */
+
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
 const { logGitCommand, logCommandInjectionAttempt } = require('./logging/security-logger');
 
+/**
+ * Detects and manages Git repository information with secure command execution.
+ *
+ * @class RepositoryDetector
+ * @classdesc Identifies Git repositories, creates unique identifiers, and manages
+ * repository-specific memory. Includes security measures to prevent command injection
+ * and unauthorized Git operations.
+ *
+ * @property {string} repoIndexPath - Path to repository index JSON file
+ * @property {string[]} allowedGitCommands - Whitelist of permitted Git commands
+ * @property {number} commandTimeout - Maximum execution time for Git commands
+ * @property {number} maxBuffer - Maximum buffer size for command output
+ *
+ * @example
+ * const detector = new RepositoryDetector();
+ * const repo = detector.getCurrentRepository();
+ * if (repo) {
+ *   console.log(`Detected: ${repo.name} at ${repo.path}`);
+ *   detector.ensureRepositoryMemory(repo);
+ * }
+ */
 class RepositoryDetector {
+    /**
+     * Creates a new RepositoryDetector instance.
+     * Initializes paths and security settings.
+     *
+     * @constructor
+     */
     constructor() {
+        /**
+         * @type {string}
+         * @description Path to repository index file
+         */
         this.repoIndexPath = path.join(process.env.HOME, '.claude', 'memory', 'repositories', 'index.json');
         this.ensureDirectories();
 
-        // Security: Allowlist of permitted git commands
+        /**
+         * @type {string[]}
+         * @description Security: Allowlist of permitted git commands
+         */
         this.allowedGitCommands = [
             'rev-parse',
             'remote',
@@ -20,9 +62,17 @@ class RepositoryDetector {
             'config'
         ];
 
-        // Security: Command execution limits
-        this.commandTimeout = 5000; // 5 seconds
-        this.maxBuffer = 1024 * 1024; // 1MB
+        /**
+         * @type {number}
+         * @description Security: Command execution timeout (5 seconds)
+         */
+        this.commandTimeout = 5000;
+
+        /**
+         * @type {number}
+         * @description Security: Maximum buffer size (1MB)
+         */
+        this.maxBuffer = 1024 * 1024;
     }
 
     /**
@@ -84,17 +134,45 @@ class RepositoryDetector {
         }
     }
 
+    /**
+     * Ensures required directories and index file exist.
+     * Creates repository directory structure if needed.
+     *
+     * @private
+     * @returns {void}
+     */
     ensureDirectories() {
         const repoDir = path.dirname(this.repoIndexPath);
         if (!fs.existsSync(repoDir)) {
             fs.mkdirSync(repoDir, { recursive: true });
         }
-        
+
         if (!fs.existsSync(this.repoIndexPath)) {
             fs.writeFileSync(this.repoIndexPath, JSON.stringify({}, null, 2));
         }
     }
 
+    /**
+     * Gets information about the current Git repository.
+     * Detects repository root, remote URL, and creates unique identifier.
+     *
+     * @returns {Object|null} Repository info object, or null if not in a Git repository
+     * @returns {string} return.hash - Unique 16-character hash identifier
+     * @returns {string} return.path - Absolute path to repository root
+     * @returns {string} return.remoteUrl - Git remote URL (or local path if no remote)
+     * @returns {string} return.name - Repository name (basename of path)
+     * @returns {string} return.lastAccessed - ISO timestamp of last access
+     *
+     * @example
+     * const repo = detector.getCurrentRepository();
+     * if (repo) {
+     *   console.log(`Repository: ${repo.name}`);
+     *   console.log(`Hash: ${repo.hash}`);
+     *   console.log(`Path: ${repo.path}`);
+     * } else {
+     *   console.log('Not in a Git repository');
+     * }
+     */
     getCurrentRepository() {
         try {
             // Get the git root directory (using secure command execution)
@@ -131,22 +209,58 @@ class RepositoryDetector {
         }
     }
 
+    /**
+     * Updates the repository index with new or updated repository information.
+     *
+     * @param {string} hash - Unique repository hash identifier
+     * @param {Object} repoInfo - Repository information object
+     * @returns {void}
+     *
+     * @example
+     * detector.updateRepositoryIndex('abc123def456', repoInfo);
+     */
     updateRepositoryIndex(hash, repoInfo) {
         const index = JSON.parse(fs.readFileSync(this.repoIndexPath, 'utf8'));
         index[hash] = repoInfo;
         fs.writeFileSync(this.repoIndexPath, JSON.stringify(index, null, 2));
     }
 
+    /**
+     * Gets the filesystem path for a repository's memory directory.
+     *
+     * @param {string} hash - Unique repository hash identifier
+     * @returns {string} Absolute path to repository memory directory
+     *
+     * @example
+     * const repoPath = detector.getRepositoryPath('abc123def456');
+     * // Returns: '/Users/user/.claude/memory/repositories/abc123def456'
+     */
     getRepositoryPath(hash) {
         return path.join(
-            process.env.HOME, 
-            '.claude', 
-            'memory', 
-            'repositories', 
+            process.env.HOME,
+            '.claude',
+            'memory',
+            'repositories',
             hash
         );
     }
 
+    /**
+     * Ensures repository memory structure exists with all required files.
+     * Creates memory.json, metadata.json, and overrides.json if they don't exist.
+     *
+     * @param {Object} repoInfo - Repository information object
+     * @param {string} repoInfo.hash - Repository hash identifier
+     * @returns {Object} Paths to memory files
+     * @returns {string} return.memoryPath - Path to memory.json
+     * @returns {string} return.metadataPath - Path to metadata.json
+     * @returns {string} return.overridesPath - Path to overrides.json
+     *
+     * @example
+     * const paths = detector.ensureRepositoryMemory(repoInfo);
+     * console.log('Memory file:', paths.memoryPath);
+     * console.log('Metadata file:', paths.metadataPath);
+     */
     ensureRepositoryMemory(repoInfo) {
         const repoPath = this.getRepositoryPath(repoInfo.hash);
         

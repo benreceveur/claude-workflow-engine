@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * Skill Executor v2.0
- * Executes Anthropic Skills with context and error handling
- * Enhanced with security validations
+ * @fileoverview Skill Executor v2.0 - Executes Anthropic Skills with context and error handling.
+ * Provides secure execution of Skills with validation, caching, and comprehensive logging.
+ * @module skill-executor
+ * @author Claude Workflow Engine Team
+ * @version 2.0.0
  */
 
 const fs = require('fs');
@@ -12,21 +14,81 @@ const { execSync } = require('child_process');
 const InputValidator = require('./validators/input-validator');
 const { logSkillExecution, logValidationFailure, logPathTraversalAttempt } = require('./logging/security-logger');
 
+/**
+ * Executes Anthropic Skills with security validations and caching.
+ *
+ * @class SkillExecutor
+ * @classdesc Main executor class for running Skills. Handles skill discovery, validation,
+ * execution, caching, and logging. Includes security measures to prevent path traversal,
+ * command injection, and resource exhaustion.
+ *
+ * @property {string} skillsDir - Directory containing all Skills
+ * @property {string} cacheDir - Directory for cached results
+ * @property {string[]} allowedExtensions - Permitted script file extensions
+ * @property {number} maxConcurrentExecutions - Maximum parallel executions allowed
+ * @property {Set<string>} activeExecutions - Currently running execution IDs
+ * @property {number} maxExecutionTime - Maximum execution time in milliseconds
+ *
+ * @example
+ * const executor = new SkillExecutor();
+ * const result = await executor.execute('tech-debt-tracker', {
+ *   operation: 'scan',
+ *   repository: '/path/to/repo'
+ * }, { useCache: true });
+ * console.log(result.success ? result.result : result.error);
+ */
 class SkillExecutor {
+    /**
+     * Creates a new SkillExecutor instance.
+     * Initializes directories and security settings.
+     *
+     * @constructor
+     */
     constructor() {
+        /**
+         * @type {string}
+         * @description Directory containing all Skills
+         */
         this.skillsDir = path.join(process.env.HOME, '.claude', 'skills');
+
+        /**
+         * @type {string}
+         * @description Directory for cached execution results
+         */
         this.cacheDir = path.join(process.env.HOME, '.claude', 'memory', '.skill-cache');
         this.ensureCacheDir();
 
-        // Security: Allowed script extensions
+        /**
+         * @type {string[]}
+         * @description Security: Allowed script extensions
+         */
         this.allowedExtensions = ['.py', '.js', '.sh'];
 
-        // Security: Execution limits
+        /**
+         * @type {number}
+         * @description Security: Maximum number of concurrent executions
+         */
         this.maxConcurrentExecutions = 5;
+
+        /**
+         * @type {Set<string>}
+         * @description Tracking set for active executions
+         */
         this.activeExecutions = new Set();
-        this.maxExecutionTime = 60000; // 60 seconds
+
+        /**
+         * @type {number}
+         * @description Security: Maximum execution time (60 seconds)
+         */
+        this.maxExecutionTime = 60000;
     }
 
+    /**
+     * Ensures the cache directory exists, creating it if necessary.
+     *
+     * @private
+     * @returns {void}
+     */
     ensureCacheDir() {
         if (!fs.existsSync(this.cacheDir)) {
             fs.mkdirSync(this.cacheDir, { recursive: true });
@@ -201,7 +263,14 @@ class SkillExecutor {
     }
 
     /**
-     * Get path to Skill directory
+     * Gets the absolute path to a Skill's directory and validates it exists.
+     *
+     * @param {string} skillName - Name of the Skill
+     * @returns {string|null} Absolute path to Skill directory, or null if not found
+     *
+     * @example
+     * const skillPath = executor.getSkillPath('tech-debt-tracker');
+     * // Returns: '/Users/user/.claude/skills/tech-debt-tracker' or null
      */
     getSkillPath(skillName) {
         const skillPath = path.join(this.skillsDir, skillName);
@@ -220,7 +289,15 @@ class SkillExecutor {
     }
 
     /**
-     * Load Skill metadata from SKILL.md
+     * Loads and parses Skill metadata from SKILL.md frontmatter.
+     *
+     * @async
+     * @param {string} skillPath - Absolute path to Skill directory
+     * @returns {Promise<Object>} Parsed metadata object with Skill information
+     *
+     * @example
+     * const metadata = await executor.loadSkillMetadata('/path/to/skill');
+     * // Returns: { name: 'tech-debt-tracker', version: '1.0', category: 'analysis', ... }
      */
     async loadSkillMetadata(skillPath) {
         const skillMdPath = path.join(skillPath, 'SKILL.md');
@@ -248,7 +325,15 @@ class SkillExecutor {
     }
 
     /**
-     * Find main executable script in Skill
+     * Finds the main executable script in a Skill's scripts directory.
+     * Searches for common script names and falls back to first executable file.
+     *
+     * @param {string} skillPath - Absolute path to Skill directory
+     * @returns {string|null} Absolute path to main script, or null if not found
+     *
+     * @example
+     * const scriptPath = executor.findMainScript('/path/to/skill');
+     * // Returns: '/path/to/skill/scripts/main.py' or null
      */
     findMainScript(skillPath) {
         const scriptsDir = path.join(skillPath, 'scripts');
@@ -289,7 +374,23 @@ class SkillExecutor {
     }
 
     /**
-     * Execute script with context
+     * Executes a script with provided context and options.
+     * Determines interpreter based on file extension and passes context via environment variables.
+     *
+     * @async
+     * @param {string} scriptPath - Absolute path to script file
+     * @param {Object} context - Context object to pass to script
+     * @param {Object} [options={}] - Execution options
+     * @param {number} [options.timeout=30000] - Execution timeout in milliseconds
+     * @returns {Promise<Object>} Script execution result (parsed JSON or plain output)
+     * @throws {Error} If script execution fails or times out
+     *
+     * @example
+     * const result = await executor.executeScript(
+     *   '/path/to/script.py',
+     *   { operation: 'scan', target: '/repo' },
+     *   { timeout: 60000 }
+     * );
      */
     async executeScript(scriptPath, context, options = {}) {
         const ext = path.extname(scriptPath);
@@ -352,7 +453,17 @@ class SkillExecutor {
     }
 
     /**
-     * Get cached result if available
+     * Retrieves a cached Skill result if available and not expired.
+     *
+     * @param {string} skillName - Name of the Skill
+     * @param {Object} context - Context object used for cache key generation
+     * @returns {Object|null} Cached result if available and valid, null otherwise
+     *
+     * @example
+     * const cached = executor.getCachedResult('tech-debt-tracker', { operation: 'scan' });
+     * if (cached) {
+     *   console.log('Using cached result:', cached);
+     * }
      */
     getCachedResult(skillName, context) {
         const cacheKey = this.generateCacheKey(skillName, context);
@@ -380,7 +491,16 @@ class SkillExecutor {
     }
 
     /**
-     * Cache Skill result
+     * Caches a Skill execution result with TTL (time-to-live).
+     *
+     * @param {string} skillName - Name of the Skill
+     * @param {Object} context - Context object used for cache key generation
+     * @param {Object} result - Result to cache
+     * @param {number} [ttl=300000] - Time-to-live in milliseconds (default: 5 minutes)
+     * @returns {void}
+     *
+     * @example
+     * executor.cacheResult('tech-debt-tracker', { operation: 'scan' }, resultData, 600000);
      */
     cacheResult(skillName, context, result, ttl = 300000) {
         const cacheKey = this.generateCacheKey(skillName, context);
@@ -398,7 +518,16 @@ class SkillExecutor {
     }
 
     /**
-     * Generate cache key from Skill name and context
+     * Generates a unique cache key from Skill name and context.
+     * Uses MD5 hash of sorted context for consistency.
+     *
+     * @param {string} skillName - Name of the Skill
+     * @param {Object} context - Context object
+     * @returns {string} Cache key in format: skillName-hash
+     *
+     * @example
+     * const key = executor.generateCacheKey('tech-debt-tracker', { operation: 'scan' });
+     * // Returns: 'tech-debt-tracker-a1b2c3d4e5f6g7h8'
      */
     generateCacheKey(skillName, context) {
         const crypto = require('crypto');
@@ -408,7 +537,17 @@ class SkillExecutor {
     }
 
     /**
-     * Log Skill execution
+     * Logs Skill execution details to persistent log file.
+     *
+     * @private
+     * @param {Object} execution - Execution object with details
+     * @param {string} execution.timestamp - ISO timestamp
+     * @param {string} execution.skill - Skill name
+     * @param {boolean} execution.success - Whether execution succeeded
+     * @param {number} execution.executionTimeMs - Execution duration
+     * @param {boolean} [execution.cached] - Whether result was from cache
+     * @param {Object} [execution.error] - Error details if failed
+     * @returns {void}
      */
     logExecution(execution) {
         const logPath = path.join(
@@ -435,7 +574,15 @@ class SkillExecutor {
     }
 
     /**
-     * List available Skills
+     * Lists all available Skills with their metadata.
+     *
+     * @returns {Array<Object>} Array of Skill objects with name, path, and metadata
+     *
+     * @example
+     * const skills = executor.listSkills();
+     * skills.forEach(skill => {
+     *   console.log(`${skill.name}: ${skill.version || 'unknown'}`);
+     * });
      */
     listSkills() {
         if (!fs.existsSync(this.skillsDir)) {
@@ -471,7 +618,14 @@ class SkillExecutor {
     }
 
     /**
-     * Load Skill metadata synchronously
+     * Loads Skill metadata synchronously from SKILL.md file.
+     * Used by listSkills() for efficient batch loading.
+     *
+     * @param {string} skillMdPath - Absolute path to SKILL.md file
+     * @returns {Object} Parsed metadata object
+     *
+     * @example
+     * const metadata = executor.loadSkillMetadataSync('/path/to/skill/SKILL.md');
      */
     loadSkillMetadataSync(skillMdPath) {
         const content = fs.readFileSync(skillMdPath, 'utf8');
