@@ -1,19 +1,30 @@
 #!/usr/bin/env node
 
 /**
- * Skill Executor v1.0
+ * Skill Executor v2.0
  * Executes Anthropic Skills with context and error handling
+ * Enhanced with security validations
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const InputValidator = require('./validators/input-validator');
+const { logSkillExecution, logValidationFailure, logPathTraversalAttempt } = require('./logging/security-logger');
 
 class SkillExecutor {
     constructor() {
         this.skillsDir = path.join(process.env.HOME, '.claude', 'skills');
         this.cacheDir = path.join(process.env.HOME, '.claude', 'memory', '.skill-cache');
         this.ensureCacheDir();
+
+        // Security: Allowed script extensions
+        this.allowedExtensions = ['.py', '.js', '.sh'];
+
+        // Security: Execution limits
+        this.maxConcurrentExecutions = 5;
+        this.activeExecutions = new Set();
+        this.maxExecutionTime = 60000; // 60 seconds
     }
 
     ensureCacheDir() {
@@ -23,7 +34,66 @@ class SkillExecutor {
     }
 
     /**
+     * Validate script path for security
+     *
+     * Ensures:
+     * - Script is within skills directory
+     * - Extension is allowed (.py, .js, .sh)
+     * - No path traversal attempts
+     * - File exists and is readable
+     *
+     * @param {string} scriptPath - Path to script file
+     * @returns {string} Validated absolute path
+     * @throws {Error} If path is invalid or insecure
+     * @private
+     */
+    validateScriptPath(scriptPath) {
+        try {
+            // Security: Validate file extension
+            InputValidator.validateFileExtension(scriptPath, this.allowedExtensions);
+
+            // Security: Ensure script is within skills directory
+            const resolved = path.resolve(scriptPath);
+            const skillsDirResolved = path.resolve(this.skillsDir);
+
+            if (!resolved.startsWith(skillsDirResolved)) {
+                // Security: Log path traversal attempt
+                logPathTraversalAttempt(scriptPath, { resolved, skillsDirResolved });
+                throw new Error(
+                    `Script path outside skills directory. ` +
+                    `Path: ${resolved}, Required prefix: ${skillsDirResolved}`
+                );
+            }
+
+            // Security: Check for path traversal
+            if (scriptPath.includes('..')) {
+                // Security: Log path traversal attempt
+                logPathTraversalAttempt(scriptPath, { reason: 'Contains ..' });
+                throw new Error('Path traversal detected: ".." not allowed');
+            }
+
+            // Verify file exists
+            if (!fs.existsSync(resolved)) {
+                throw new Error(`Script file not found: ${resolved}`);
+            }
+
+            // Verify it's a file, not a directory
+            const stats = fs.statSync(resolved);
+            if (!stats.isFile()) {
+                throw new Error(`Script path is not a file: ${resolved}`);
+            }
+
+            return resolved;
+        } catch (error) {
+            // Security: Log validation failure
+            logValidationFailure('script_path', scriptPath, error.message);
+            throw error;
+        }
+    }
+
+    /**
      * Execute a Skill
+     *
      * @param {string} skillName - Name of the Skill to execute
      * @param {object} context - Context object to pass to Skill
      * @param {object} options - Execution options
@@ -31,9 +101,27 @@ class SkillExecutor {
      */
     async execute(skillName, context = {}, options = {}) {
         const startTime = Date.now();
+
+        // Security: Validate and sanitize skill name
+        const sanitizedSkillName = InputValidator.sanitizeSkillName(skillName);
+
+        // Security: Sanitize context to prevent prototype pollution
+        const sanitizedContext = InputValidator.sanitizeContext(context);
+
+        // Security: Check concurrent execution limit
+        if (this.activeExecutions.size >= this.maxConcurrentExecutions) {
+            throw new Error(
+                `Maximum concurrent executions reached (${this.maxConcurrentExecutions}). ` +
+                `Please wait for other Skills to complete.`
+            );
+        }
+
+        const executionId = `${sanitizedSkillName}-${Date.now()}`;
+        this.activeExecutions.add(executionId);
+
         const execution = {
-            skill: skillName,
-            context: context,
+            skill: sanitizedSkillName,
+            context: sanitizedContext,
             timestamp: new Date().toISOString(),
             success: false,
             result: null,
@@ -43,9 +131,9 @@ class SkillExecutor {
 
         try {
             // 1. Validate Skill exists
-            const skillPath = this.getSkillPath(skillName);
+            const skillPath = this.getSkillPath(sanitizedSkillName);
             if (!skillPath) {
-                throw new Error(`Skill '${skillName}' not found in ${this.skillsDir}`);
+                throw new Error(`Skill '${sanitizedSkillName}' not found in ${this.skillsDir}`);
             }
 
             // 2. Load Skill metadata
@@ -54,7 +142,7 @@ class SkillExecutor {
 
             // 3. Check cache if enabled
             if (options.useCache) {
-                const cached = this.getCachedResult(skillName, context);
+                const cached = this.getCachedResult(sanitizedSkillName, sanitizedContext);
                 if (cached) {
                     execution.success = true;
                     execution.result = cached;
@@ -64,22 +152,26 @@ class SkillExecutor {
                 }
             }
 
-            // 4. Execute Skill script
+            // 4. Find and validate Skill script
             const scriptPath = this.findMainScript(skillPath);
             if (!scriptPath) {
                 throw new Error(`No executable script found in ${skillPath}/scripts/`);
             }
 
-            const result = await this.executeScript(scriptPath, context, options);
+            // Security: Validate script path before execution
+            const validatedScriptPath = this.validateScriptPath(scriptPath);
 
-            // 5. Cache result if successful
+            // 5. Execute Skill script with sanitized context
+            const result = await this.executeScript(validatedScriptPath, sanitizedContext, options);
+
+            // 6. Cache result if successful
             if (options.useCache && result) {
-                this.cacheResult(skillName, context, result);
+                this.cacheResult(sanitizedSkillName, sanitizedContext, result);
             }
 
             execution.success = true;
             execution.result = result;
-            execution.scriptPath = scriptPath;
+            execution.scriptPath = validatedScriptPath;
 
         } catch (error) {
             execution.success = false;
@@ -87,11 +179,22 @@ class SkillExecutor {
                 message: error.message,
                 stack: error.stack
             };
+        } finally {
+            // Security: Always remove from active executions
+            this.activeExecutions.delete(executionId);
+
+            // Security: Log skill execution
+            execution.executionTimeMs = Date.now() - startTime;
+            logSkillExecution(
+                sanitizedSkillName,
+                sanitizedContext,
+                execution.success,
+                execution.executionTimeMs,
+                execution.error
+            );
         }
 
-        execution.executionTimeMs = Date.now() - startTime;
-
-        // Log execution
+        // Log execution (internal logging)
         this.logExecution(execution);
 
         return execution;
