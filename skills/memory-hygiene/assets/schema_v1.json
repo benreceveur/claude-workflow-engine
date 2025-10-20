@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Memory Entry Schema",
+  "description": "Schema for memory entries in Claude Memory System",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["topic", "scope", "value", "source", "confidence"],
+  "properties": {
+    "topic": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Brief identifier for this memory entry",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["global", "repository"],
+      "description": "Where this memory applies"
+    },
+    "value": {
+      "description": "The actual memory content (any type)"
+    },
+    "TTL": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp when this entry expires"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["user", "agent", "system"],
+      "description": "Who/what created this entry"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Confidence level in this memory"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Repository hash if scope is repository"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this entry was created"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Searchable tags"
+        },
+        "provenance": {
+          "type": "string",
+          "description": "Where this memory came from"
+        }
+      }
+    }
+  }
+}

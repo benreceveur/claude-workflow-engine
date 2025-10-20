@@ -1,0 +1,36 @@
+{
+  "name": "claude-workflow-engine",
+  "version": "1.0.0",
+  "description": "Accelerate workflows with Skills orchestration and intelligent automation for Claude AI",
+  "main": "src/skill-executor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "./scripts/install.sh",
+    "list-skills": "node src/skill-executor.js list"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benreceveur/claude-workflow-engine.git"
+  },
+  "keywords": [
+    "claude",
+    "ai",
+    "automation",
+    "workflow",
+    "skills",
+    "agents",
+    "devops",
+    "productivity",
+    "llm",
+    "orchestration"
+  ],
+  "author": "Ben Receveur",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benreceveur/claude-workflow-engine/issues"
+  },
+  "homepage": "https://github.com/benreceveur/claude-workflow-engine#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
