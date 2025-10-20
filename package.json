@@ -4,7 +4,14 @@
   "description": "Accelerate workflows with Skills orchestration and intelligent automation for Claude AI",
   "main": "src/skill-executor.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha tests/**/*.test.js",
+    "test:unit": "mocha tests/unit/**/*.test.js",
+    "test:integration": "mocha tests/integration/**/*.test.js",
+    "test:security": "mocha tests/security/**/*.test.js",
+    "test:watch": "mocha tests/**/*.test.js --watch",
+    "coverage": "nyc npm test",
+    "coverage:report": "nyc report --reporter=html --reporter=text",
+    "coverage:check": "nyc check-coverage --lines 80 --functions 80 --branches 80",
     "install": "./scripts/install.sh",
     "list-skills": "node src/skill-executor.js list"
   },
@@ -32,5 +39,12 @@
   "homepage": "https://github.com/benreceveur/claude-workflow-engine#readme",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "chai": "^4.3.10",
+    "sinon": "^17.0.1",
+    "nyc": "^15.1.0",
+    "eslint": "^8.50.0"
   }
 }
