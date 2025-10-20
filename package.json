@@ -3,6 +3,18 @@
   "version": "1.0.0",
   "description": "Accelerate workflows with Skills orchestration and intelligent automation for Claude AI",
   "main": "src/skill-executor.js",
+  "bin": {
+    "skill-executor": "./src/skill-executor.js"
+  },
+  "files": [
+    "src/",
+    "skills/",
+    "scripts/",
+    "README.md",
+    "LICENSE",
+    "QUALITY_IMPROVEMENT_PLAN.md",
+    "CODE_REVIEW_REPORT.md"
+  ],
   "scripts": {
     "test": "mocha tests/**/*.test.js",
     "test:unit": "mocha tests/unit/**/*.test.js",
@@ -12,7 +24,6 @@
     "coverage": "nyc npm test",
     "coverage:report": "nyc report --reporter=html --reporter=text",
     "coverage:check": "nyc check-coverage --lines 80 --functions 80 --branches 80",
-    "install": "./scripts/install.sh",
     "list-skills": "node src/skill-executor.js list"
   },
   "repository": {
@@ -29,7 +40,10 @@
     "devops",
     "productivity",
     "llm",
-    "orchestration"
+    "orchestration",
+    "finops",
+    "code-generation",
+    "technical-debt"
   ],
   "author": "Ben Receveur",
   "license": "MIT",
@@ -40,6 +54,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "preferGlobal": true,
   "devDependencies": {
     "mocha": "^10.2.0",
     "chai": "^4.3.10",
