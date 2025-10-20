@@ -143,10 +143,10 @@ describe('Security: Input Validation', () => {
 
             const sanitized = InputValidator.sanitizeContext(maliciousContext);
 
-            // Check dangerous properties removed
-            assert.strictEqual(sanitized.__proto__, undefined);
-            assert.strictEqual(sanitized.constructor, undefined);
-            assert.strictEqual(sanitized.prototype, undefined);
+            // Check dangerous properties removed (they should not exist as own properties)
+            assert.strictEqual(Object.prototype.hasOwnProperty.call(sanitized, '__proto__'), false);
+            assert.strictEqual(Object.prototype.hasOwnProperty.call(sanitized, 'constructor'), false);
+            assert.strictEqual(Object.prototype.hasOwnProperty.call(sanitized, 'prototype'), false);
 
             // Check valid properties preserved
             assert.strictEqual(sanitized.operation, 'scan');
@@ -165,7 +165,7 @@ describe('Security: Input Validation', () => {
 
             assert.strictEqual(sanitized.operation, 'scan');
             assert.strictEqual(sanitized.options.valid, 'data');
-            assert.strictEqual(sanitized.options.__proto__, undefined);
+            assert.strictEqual(Object.prototype.hasOwnProperty.call(sanitized.options, '__proto__'), false);
         });
 
         it('should reject non-object contexts', () => {
