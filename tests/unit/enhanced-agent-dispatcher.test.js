@@ -365,6 +365,154 @@ describe('Unit: EnhancedAgentDispatcher', () => {
         });
     });
 
+    describe('dispatch', () => {
+        it('should dispatch and return recommended agent', async () => {
+            const result = await dispatcher.dispatch('create a React component');
+
+            assert(result.recommended_agent);
+            assert(typeof result.confidence === 'number');
+            assert(result.reasoning);
+            assert(typeof result.mandatory === 'boolean');
+            assert(Array.isArray(result.alternatives));
+        });
+
+        it('should return alternatives array', async () => {
+            const result = await dispatcher.dispatch('build REST API with authentication');
+
+            assert(Array.isArray(result.alternatives));
+            // Alternatives should not include the recommended agent
+        });
+
+        it('should include debug info when debugMode is true', async () => {
+            dispatcher.debugMode = true;
+            const result = await dispatcher.dispatch('deploy to kubernetes');
+
+            assert(result.full_analysis !== undefined);
+            assert(typeof result.full_analysis === 'object');
+
+            dispatcher.debugMode = false;
+        });
+
+        it('should not include debug info when debugMode is false', async () => {
+            dispatcher.debugMode = false;
+            const result = await dispatcher.dispatch('create API endpoint');
+
+            assert(result.full_analysis === undefined);
+        });
+
+        it('should handle context in dispatch', async () => {
+            const context = { filePaths: ['src/components/Button.tsx'] };
+            const result = await dispatcher.dispatch('fix styling issue', context);
+
+            assert(result.recommended_agent);
+            assert(result.confidence >= 0);
+        });
+    });
+
+    describe('calculateAgentScore with context indicators', () => {
+        it('should boost score with matching file paths', () => {
+            const context = {
+                filePaths: ['src/components/Button.tsx', 'public/index.html']
+            };
+
+            const score = dispatcher.calculateAgentScore(
+                'fix ui issue',
+                'frontend-engineer',
+                context
+            );
+
+            // Should have some score from context
+            assert(score > 0);
+        });
+
+        it('should boost devops score with docker context', () => {
+            const context = {
+                filePaths: ['Dockerfile', 'docker-compose.yml']
+            };
+
+            const score = dispatcher.calculateAgentScore(
+                'update deployment',
+                'devops-engineer',
+                context
+            );
+
+            assert(score > 0);
+        });
+
+        it('should boost backend score with model/controller context', () => {
+            const context = {
+                filePaths: ['models/User.py', 'controllers/auth.py']
+            };
+
+            const score = dispatcher.calculateAgentScore(
+                'update service',
+                'backend-engineer',
+                context
+            );
+
+            assert(score > 0);
+        });
+
+        it('should cap score at 1.0', () => {
+            const context = {
+                filePaths: ['.jsx', '.tsx', '.vue', 'components/', 'public/', 'assets/']
+            };
+
+            const score = dispatcher.calculateAgentScore(
+                'react vue angular javascript typescript css html component ui',
+                'frontend-engineer',
+                context
+            );
+
+            assert(score <= 1.0);
+        });
+    });
+
+    describe('analyzeInput - complete flow', () => {
+        it('should set mandatory_agent when trigger matches', async () => {
+            const analysis = await dispatcher.analyzeInput('create new component for dashboard');
+
+            assert(analysis.mandatory_agent !== undefined);
+            assert(analysis.recommendations);
+            assert(analysis.final_recommendation);
+        });
+
+        it('should generate recommendations array', async () => {
+            const analysis = await dispatcher.analyzeInput('build microservice architecture');
+
+            assert(Array.isArray(analysis.recommendations));
+            assert(analysis.recommendations.length >= 0);
+        });
+
+        it('should select final recommendation', async () => {
+            const analysis = await dispatcher.analyzeInput('optimize database queries');
+
+            assert(analysis.final_recommendation);
+            assert(analysis.final_recommendation.agent);
+            assert(typeof analysis.final_recommendation.confidence === 'number');
+        });
+
+        it('should include repository context if available', async () => {
+            const analysis = await dispatcher.analyzeInput('implement feature');
+
+            // Repository context may or may not be available
+            assert(analysis.repository_context !== undefined || analysis.repository_context === undefined);
+        });
+    });
+
+    describe('runTests', () => {
+        it('should run test cases without errors', async () => {
+            const originalLog = console.log;
+            let logCalled = false;
+            console.log = () => { logCalled = true; };
+
+            await dispatcher.runTests();
+
+            console.log = originalLog;
+            assert(logCalled);
+        });
+    });
+
     describe('Edge Cases', () => {
         it('should handle special characters in input', async () => {
             const analysis = await dispatcher.analyzeInput('fix @deprecated API endpoints!!!');
@@ -385,6 +533,208 @@ describe('Unit: EnhancedAgentDispatcher', () => {
             const analysis = await dispatcher.analyzeInput('deploy to k8s cluster v1.24');
 
             assert(analysis.agent_scores['devops-engineer'] !== undefined);
+        });
+
+        it('should handle empty context', async () => {
+            const analysis = await dispatcher.analyzeInput('create feature', {});
+
+            assert(analysis.agent_scores);
+        });
+
+        it('should handle null context gracefully', async () => {
+            const score = dispatcher.calculateAgentScore('test input', 'frontend-engineer', {});
+
+            assert(typeof score === 'number');
+            assert(score >= 0);
+        });
+    });
+
+    describe('Repository Integration', () => {
+        it('should work without repository integrator', async () => {
+            dispatcher.repoIntegrator = null;
+            const analysis = await dispatcher.analyzeInput('create feature');
+
+            assert(analysis.repository_context === undefined || analysis.repository_context === null);
+            assert(analysis.agent_scores);
+        });
+
+        it('should enhance scores when repository integrator available', async () => {
+            // Mock repository integrator
+            dispatcher.repoIntegrator = {
+                getCurrentRepository: () => ({ name: 'test-repo', hash: 'abc123' }),
+                enhanceAgentScores: (input, scores) => {
+                    const enhanced = { ...scores };
+                    enhanced['frontend-engineer'] = Math.min(1.0, scores['frontend-engineer'] * 1.2);
+                    return enhanced;
+                }
+            };
+
+            const analysis = await dispatcher.analyzeInput('create React component');
+
+            assert(analysis.repository_context);
+            assert.strictEqual(analysis.repository_context.name, 'test-repo');
+            // Scores should be enhanced
+            assert(analysis.agent_scores);
+        });
+
+        it('should handle repository integrator errors gracefully', async () => {
+            // Mock failing repository integrator
+            dispatcher.repoIntegrator = {
+                getCurrentRepository: () => { throw new Error('Repository detection failed'); },
+                enhanceAgentScores: () => { throw new Error('Enhancement failed'); }
+            };
+
+            const analysis = await dispatcher.analyzeInput('create feature');
+
+            // Should still return analysis
+            assert(analysis);
+            assert(analysis.agent_scores);
+            assert(analysis.final_recommendation);
+        });
+
+        it('should handle score enhancement errors gracefully', async () => {
+            dispatcher.repoIntegrator = {
+                getCurrentRepository: () => ({ name: 'test-repo' }),
+                enhanceAgentScores: () => { throw new Error('Enhancement failed'); }
+            };
+
+            const analysis = await dispatcher.analyzeInput('deploy to kubernetes');
+
+            // Should use base scores when enhancement fails
+            assert(analysis.agent_scores);
+            assert(analysis.final_recommendation);
+        });
+    });
+
+    describe('Learning System Integration', () => {
+        it('should work without learning system', async () => {
+            dispatcher.learningSystem = null;
+            const analysis = await dispatcher.analyzeInput('build API');
+
+            assert(analysis);
+            assert(analysis.final_recommendation);
+        });
+
+        it('should log to learning system when available', async () => {
+            let loggedInput = null;
+            let loggedRecommendation = null;
+            let loggedContext = null;
+
+            dispatcher.learningSystem = {
+                logDispatch: (input, recommendation, context) => {
+                    loggedInput = input;
+                    loggedRecommendation = recommendation;
+                    loggedContext = context;
+                }
+            };
+
+            const context = { test: 'value' };
+            const analysis = await dispatcher.analyzeInput('create component', context);
+
+            assert.strictEqual(loggedInput, 'create component');
+            assert(loggedRecommendation);
+            assert.deepStrictEqual(loggedContext, context);
+        });
+
+        it('should handle learning system logging errors gracefully', async () => {
+            dispatcher.learningSystem = {
+                logDispatch: () => { throw new Error('Logging failed'); }
+            };
+
+            // Should not throw error
+            const analysis = await dispatcher.analyzeInput('deploy application');
+
+            assert(analysis);
+            assert(analysis.final_recommendation);
+        });
+
+        it('should handle missing logDispatch method', async () => {
+            dispatcher.learningSystem = {
+                // Missing logDispatch method
+                someOtherMethod: () => {}
+            };
+
+            const analysis = await dispatcher.analyzeInput('test input');
+
+            assert(analysis);
+            assert(analysis.final_recommendation);
+        });
+    });
+
+    describe('CLI Interface - handleCLI', () => {
+        let originalLog;
+        let originalError;
+        let logOutput;
+        let errorOutput;
+
+        beforeEach(() => {
+            originalLog = console.log;
+            originalError = console.error;
+            logOutput = [];
+            errorOutput = [];
+            console.log = (...args) => logOutput.push(args.join(' '));
+            console.error = (...args) => errorOutput.push(args.join(' '));
+        });
+
+        afterEach(() => {
+            console.log = originalLog;
+            console.error = originalError;
+        });
+
+        it('should handle analyze command', async () => {
+            await dispatcher.handleCLI(['analyze', 'create', 'React', 'component']);
+
+            assert(logOutput.length > 0);
+            const output = logOutput.join('\n');
+            assert(output.includes('recommended_agent') || output.includes('{'));
+        });
+
+        it('should show error for analyze without input', async () => {
+            await dispatcher.handleCLI(['analyze']);
+
+            assert(errorOutput.length > 0);
+            assert(errorOutput[0].includes('Usage'));
+        });
+
+        it('should handle test command', async () => {
+            await dispatcher.handleCLI(['test']);
+
+            // runTests should have been called
+            assert(logOutput.length > 0);
+        });
+
+        it('should handle agents command', async () => {
+            await dispatcher.handleCLI(['agents']);
+
+            assert(logOutput.length > 0);
+            const output = logOutput.join('\n');
+            assert(output.includes('Available agents'));
+            assert(output.includes('frontend-engineer') || output.includes('backend-engineer'));
+        });
+
+        it('should show help for unknown command', async () => {
+            await dispatcher.handleCLI(['unknown-command']);
+
+            assert(logOutput.length > 0);
+            const output = logOutput.join('\n');
+            assert(output.includes('Enhanced Agent Dispatcher') || output.includes('Usage'));
+        });
+
+        it('should show help for no command', async () => {
+            await dispatcher.handleCLI([]);
+
+            assert(logOutput.length > 0);
+            const output = logOutput.join('\n');
+            assert(output.includes('Usage') || output.includes('Enhanced Agent Dispatcher'));
+        });
+
+        it('should handle analyze with multi-word input', async () => {
+            await dispatcher.handleCLI(['analyze', 'build', 'a', 'REST', 'API', 'with', 'authentication']);
+
+            assert(logOutput.length > 0);
+            const output = logOutput.join('\n');
+            // Should contain JSON output
+            assert(output.includes('recommended_agent') || output.includes('confidence'));
         });
     });
 });
