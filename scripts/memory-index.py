@@ -29,6 +29,40 @@ except ImportError:
     SentenceTransformer = None
 
 MODEL_CACHE = {}
+INDEX_CACHE = {}
+DEFAULT_BATCH_SIZE = 8
+MAX_BATCH_SIZE = 128
+
+
+def validate_batch_size(batch_value, default=DEFAULT_BATCH_SIZE):
+    """Validate and sanitize batch size parameter."""
+    if batch_value is None:
+        return default
+    
+    try:
+        batch_int = int(batch_value)
+    except (ValueError, TypeError):
+        print(json.dumps({
+            "status": "warning",
+            "message": f"Invalid batchSize '{batch_value}', using default {default}"
+        }), file=sys.stderr)
+        return default
+    
+    if batch_int < 1:
+        print(json.dumps({
+            "status": "warning", 
+            "message": f"batchSize {batch_int} too small, using 1"
+        }), file=sys.stderr)
+        return 1
+    
+    if batch_int > MAX_BATCH_SIZE:
+        print(json.dumps({
+            "status": "warning",
+            "message": f"batchSize {batch_int} too large, using {MAX_BATCH_SIZE}"
+        }), file=sys.stderr)
+        return MAX_BATCH_SIZE
+    
+    return batch_int
 
 
 def load_payload():
@@ -179,7 +213,8 @@ def command_upsert(payload):
             return {"status": "ok", "updated": 0}
 
         texts = [item[1] for item in to_embed]
-        embeddings = model.encode(texts, batch_size=payload.get('batchSize', 8), normalize_embeddings=True)
+        validated_batch_size = validate_batch_size(payload.get('batchSize'))
+        embeddings = model.encode(texts, batch_size=validated_batch_size, normalize_embeddings=True)
 
         dimension = len(embeddings[0]) if embeddings else 0
         ensure_model_meta(conn, model_name, dimension)
@@ -193,8 +228,42 @@ def command_upsert(payload):
             )
 
         conn.commit()
+        INDEX_CACHE.pop(db_path, None)
 
         return {"status": "ok", "updated": len(to_embed)}
+
+
+def load_index_cache(conn: sqlite3.Connection, db_path: str):
+    cursor = conn.execute('SELECT MAX(updated_at) FROM documents')
+    row = cursor.fetchone()
+    latest = row[0] if row and row[0] is not None else 0
+
+    cached = INDEX_CACHE.get(db_path)
+    if cached and cached['version'] == latest:
+        return cached
+
+    rows = []
+    vectors = []
+    for doc_id, metadata_json, vector_blob in conn.execute('SELECT id, metadata, vector FROM documents'):
+        try:
+            metadata = json.loads(metadata_json) if metadata_json else {}
+        except json.JSONDecodeError:
+            metadata = {"raw": metadata_json}
+        rows.append((doc_id, metadata))
+        vectors.append(deserialize_vector(vector_blob))
+
+    if vectors:
+        matrix = np.vstack(vectors)
+    else:
+        matrix = np.zeros((0, 1), dtype=np.float32)
+
+    cache_entry = {
+        'version': latest,
+        'rows': rows,
+        'matrix': matrix,
+    }
+    INDEX_CACHE[db_path] = cache_entry
+    return cache_entry
 
 
 def command_search(payload):
@@ -212,32 +281,35 @@ def command_search(payload):
 
     with closing(with_connection(db_path)) as conn:
         ensure_schema(conn)
-        cursor = conn.execute('SELECT id, metadata, vector FROM documents')
-        rows = cursor.fetchall()
-        if not rows:
-            return {"status": "ok", "results": []}
+        cache_entry = load_index_cache(conn, db_path)
+
+    matrix = cache_entry['matrix']
+    if matrix.shape[0] == 0:
+        return {"status": "ok", "results": []}
 
     query_vector = model.encode([query], normalize_embeddings=True)[0]
     query_vec = np.asarray(query_vector, dtype=np.float32)
+    scores = matrix.dot(query_vec)
 
+    if scores.ndim == 0:
+        scores = np.asarray([scores], dtype=np.float32)
+
+    order = np.argsort(scores)[::-1]
     results = []
-    for doc_id, metadata_json, vector_blob in rows:
-        vector = deserialize_vector(vector_blob)
-        score = float(np.dot(query_vec, vector))
+    for idx in order:
+        score = float(scores[idx])
         if score < min_score:
             continue
-        try:
-            metadata = json.loads(metadata_json) if metadata_json else {}
-        except json.JSONDecodeError:
-            metadata = {"raw": metadata_json}
+        doc_id, metadata = cache_entry['rows'][idx]
         results.append({
             "id": doc_id,
             "score": score,
             "metadata": metadata,
         })
+        if len(results) >= limit:
+            break
 
-    results.sort(key=lambda item: item['score'], reverse=True)
-    return {"status": "ok", "results": results[:limit]}
+    return {"status": "ok", "results": results}
 
 
 def command_stats(payload):
