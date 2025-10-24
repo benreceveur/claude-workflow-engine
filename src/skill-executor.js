@@ -22,6 +22,7 @@ const {
     ConcurrencyError,
     wrapError
 } = require('./errors/skill-error');
+const { getSkillsDir, getMemoryDir } = require('./utils/runtime-paths.js');
 
 /**
  * Executes Anthropic Skills with security validations and caching.
@@ -58,13 +59,13 @@ class SkillExecutor {
          * @type {string}
          * @description Directory containing all Skills
          */
-        this.skillsDir = path.join(process.env.HOME, '.claude', 'skills');
+        this.skillsDir = getSkillsDir();
 
         /**
          * @type {string}
          * @description Directory for cached execution results
          */
-        this.cacheDir = path.join(process.env.HOME, '.claude', 'memory', '.skill-cache');
+        this.cacheDir = path.join(getMemoryDir(), '.skill-cache');
         this.ensureCacheDir();
 
         /**

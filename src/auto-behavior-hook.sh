@@ -5,10 +5,17 @@
 # This script is sourced to provide seamless automation
 
 # Configuration
-AUTO_BEHAVIOR_DIR="$HOME/.claude/memory"
+WORKFLOW_ENGINE_HOME="${WORKFLOW_ENGINE_HOME:-$HOME/.workflow-engine}"
+if [ ! -d "$WORKFLOW_ENGINE_HOME" ] && [ -d "$HOME/.claude" ]; then
+    WORKFLOW_ENGINE_HOME="$HOME/.claude"
+fi
+
+AUTO_BEHAVIOR_DIR="$WORKFLOW_ENGINE_HOME/memory"
+mkdir -p "$AUTO_BEHAVIOR_DIR"
 AUTO_BEHAVIOR_SYSTEM="$AUTO_BEHAVIOR_DIR/auto-behavior-system.js"
 TEMP_DIR="/tmp/claude-auto-behavior"
 SESSION_ID="claude-session-$(date +%s)"
+AUTO_BEHAVIOR_TARGETS="${AUTO_BEHAVIOR_TARGETS:-claude codex chatgpt}"
 
 # Ensure temp directory exists
 mkdir -p "$TEMP_DIR"
@@ -135,7 +142,7 @@ create_behavior_prompt() {
     
     # Load memory context
     if [ -f "$AUTO_BEHAVIOR_DIR/memory-loader.sh" ]; then
-        bash "$AUTO_BEHAVIOR_DIR/memory-loader.sh" >> "$pre_prompt_file" 2>/dev/null
+        bash "$AUTO_BEHAVIOR_DIR/memory-loader.sh" "$user_input" >> "$pre_prompt_file" 2>/dev/null
         echo "" >> "$pre_prompt_file"
     fi
     
@@ -193,10 +200,12 @@ claude_with_auto_behavior() {
 enable_auto_behavior() {
     echo "🤖 Enabling Auto Behavior System..."
     
-    # Create alias for claude command if not exists
-    if ! alias claude >/dev/null 2>&1; then
-        alias claude='claude_with_auto_behavior'
-    fi
+    # Create aliases for configured targets if not present
+    for target in $AUTO_BEHAVIOR_TARGETS; do
+        if ! alias "$target" >/dev/null 2>&1; then
+            alias "$target"='claude_with_auto_behavior'
+        fi
+    done
     
     # Show system status
     if [ -f "$AUTO_BEHAVIOR_SYSTEM" ]; then
@@ -211,7 +220,9 @@ disable_auto_behavior() {
     # Ensure TEMP_DIR is set
     TEMP_DIR="${TEMP_DIR:-/tmp/claude-auto-behavior}"
     
-    unalias claude 2>/dev/null
+    for target in $AUTO_BEHAVIOR_TARGETS; do
+        unalias "$target" 2>/dev/null
+    done
     rm -f "$TEMP_DIR/banner-shown"
     echo "❌ Auto Behavior System disabled"
 }

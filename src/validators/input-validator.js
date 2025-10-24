@@ -8,6 +8,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const { resolveBaseDir } = require('../utils/runtime-paths.js');
 
 /**
  * Provides comprehensive input validation for all user-provided data.
@@ -96,7 +97,7 @@ class InputValidator {
         }
 
         // Default allowed root is ~/.claude
-        const defaultRoot = path.join(process.env.HOME, '.claude');
+        const defaultRoot = resolveBaseDir();
         const allowed = path.resolve(allowedRoot || defaultRoot);
 
         // Resolve to absolute path

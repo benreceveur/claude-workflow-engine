@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getLogsDir } = require('../utils/runtime-paths.js');
 
 /**
  * Enumeration of security event types for categorizing log entries.
@@ -76,7 +77,7 @@ class SecurityAuditLog {
          * @type {string}
          * @description Directory for all log files
          */
-        this.logDir = path.join(process.env.HOME, '.claude', 'logs');
+        this.logDir = getLogsDir();
 
         /**
          * @type {string}
@@ -172,7 +173,9 @@ class SecurityAuditLog {
             fs.appendFileSync(logPath, JSON.stringify(entry) + '\n');
         } catch (error) {
             // Fail gracefully - don't crash application if logging fails
-            console.error('Failed to write security log:', error.message);
+            if (process.env.DEBUG_SECURITY === 'true') {
+                console.error('Failed to write security log:', error.message);
+            }
         }
     }
 

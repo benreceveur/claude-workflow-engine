@@ -35,12 +35,14 @@ Claude Workflow Engine is an **intelligent memory and automation system** for Cl
 git clone https://github.com/benreceveur/claude-workflow-engine.git
 cd claude-workflow-engine
 
-# Run installation script
-./scripts/install.sh
+# Run the one-click installer (auto-configures your shell)
+./install.sh
 
 # Verify installation
 node src/skill-executor.js list
 ```
+
+Need a standalone loader you can share or double-click? Use `download/claude-workflow-engine-installer.command` – it simply dispatches to the latest installer in this repository, so you always run the current automation.
 
 ### First Skill Execution
 

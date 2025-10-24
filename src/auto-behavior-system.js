@@ -8,10 +8,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getMemoryDir } = require('./utils/runtime-paths.js');
 
 class AutoBehaviorSystemWithSkills {
     constructor() {
-        this.memoryDir = path.join(process.env.HOME, '.claude', 'memory');
+        this.memoryDir = getMemoryDir();
         this.configPath = path.join(this.memoryDir, 'auto-behavior-config.json');
         this.config = this.loadConfig();
         this.agentDispatcher = null;
@@ -30,6 +31,8 @@ class AutoBehaviorSystemWithSkills {
             enableStrictMode: false,
             confidenceThreshold: 0.7,
             skillConfidenceThreshold: 0.8,        // NEW
+            memoryContextLimit: 6,
+            memorySummarySections: 3,
             mandatoryAgents: true,
             logInteractions: true
         };
@@ -212,13 +215,24 @@ class AutoBehaviorSystemWithSkills {
         // Load memory context if enabled
         if (this.config.enableMemoryIntegration && this.memoryManager) {
             try {
-                // Try to get relevant context (if method exists)
+                const limit = this.config.memoryContextLimit || 6;
+                const sectionLimit = this.config.memorySummarySections || 3;
+                let matches = [];
+
                 if (typeof this.memoryManager.getRelevantContext === 'function') {
-                    processing.memory_context = await this.memoryManager.getRelevantContext(userInput);
-                } else {
-                    // Fallback: use effective memory
-                    processing.memory_context = this.memoryManager.getEffectiveMemory();
+                    matches = this.memoryManager.getRelevantContext(userInput, { limit });
                 }
+
+                processing.memory_context = {
+                    query: userInput,
+                    matches,
+                    summary: this.memoryManager.generateContextSummary({
+                        query: userInput,
+                        maxMatches: limit,
+                        maxSectionEntries: 2,
+                        maxOptionalSections: sectionLimit
+                    })
+                };
             } catch (error) {
                 console.warn('Failed to load memory context:', error.message);
             }
@@ -346,11 +360,11 @@ class AutoBehaviorSystemWithSkills {
         }
 
         // Rule 3: Memory context integration
-        if (processing.memory_context && processing.memory_context.relevant_patterns) {
+        if (processing.memory_context?.matches?.length) {
             rules.push({
                 type: 'memory_integration',
-                patterns: processing.memory_context.relevant_patterns,
-                instruction: 'Apply repository-specific patterns and previous decisions'
+                matches: processing.memory_context.matches,
+                instruction: `Consider ${processing.memory_context.matches.length} high-signal memory entries`
             });
         }
 
@@ -400,8 +414,14 @@ class AutoBehaviorSystemWithSkills {
         const instructions = [];
 
         // Add memory context instruction
-        if (processing.memory_context) {
-            instructions.push('🧠 MEMORY CONTEXT LOADED: Apply repository-specific patterns and maintain consistency with previous decisions');
+        if (processing.memory_context?.matches?.length) {
+            const preview = processing.memory_context.matches
+                .slice(0, 3)
+                .map(match => `${match.path} (${(match.score * 100).toFixed(0)}%)`)
+                .join('; ');
+            instructions.push(`🧠 MEMORY CONTEXT: ${preview}`);
+        } else if (processing.memory_context) {
+            instructions.push('🧠 MEMORY CONTEXT LOADED');
         }
 
         // Add Skill instruction (NEW)

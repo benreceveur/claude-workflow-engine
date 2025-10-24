@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getMemoryDir } = require('./runtime-paths');
 
 /**
  * Resource cleanup manager for Skill execution environment
@@ -23,7 +24,7 @@ class ResourceCleanup {
      * @param {number} options.maxCacheSize - Maximum cache size in bytes
      */
     constructor(options = {}) {
-        this.cacheDir = options.cacheDir || path.join(process.env.HOME, '.claude', 'memory', '.skill-cache');
+        this.cacheDir = options.cacheDir || path.join(getMemoryDir(), '.skill-cache');
         this.maxCacheAge = options.maxCacheAge || 24 * 60 * 60 * 1000; // 24 hours
         this.maxCacheSize = options.maxCacheSize || 100 * 1024 * 1024; // 100MB
         this.cleanupHandlers = [];

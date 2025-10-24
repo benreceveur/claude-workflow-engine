@@ -13,6 +13,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
 const { logGitCommand, logCommandInjectionAttempt } = require('./logging/security-logger');
+const { getMemoryDir } = require('./utils/runtime-paths');
 
 /**
  * Detects and manages Git repository information with secure command execution.
@@ -47,7 +48,8 @@ class RepositoryDetector {
          * @type {string}
          * @description Path to repository index file
          */
-        this.repoIndexPath = path.join(process.env.HOME, '.claude', 'memory', 'repositories', 'index.json');
+        this.memoryDir = getMemoryDir();
+        this.repoIndexPath = path.join(this.memoryDir, 'repositories', 'index.json');
         this.ensureDirectories();
 
         /**
@@ -237,9 +239,7 @@ class RepositoryDetector {
      */
     getRepositoryPath(hash) {
         return path.join(
-            process.env.HOME,
-            '.claude',
-            'memory',
+            this.memoryDir,
             'repositories',
             hash
         );
