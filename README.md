@@ -291,6 +291,12 @@ Pattern Matching
 - [Final Implementation Report](./docs/FINAL-SKILLS-IMPLEMENTATION-REPORT.md)
 - [Integration Test Results](./docs/skills-agents-integration-test.md)
 
+### Reports & Status
+- Consolidated quality reviews, phase completions, and improvement plans live in [`docs/reports/`](./docs/reports).
+  - [Code Quality Review (2025-10-20)](./docs/reports/CODE_QUALITY_REVIEW_2025-10-20.md)
+  - [Engineering Progress Summary](./docs/reports/PROGRESS_SUMMARY.md)
+  - [Quality & Test Coverage Plans](./docs/reports/QUALITY_IMPROVEMENT_PLAN.md)
+
 ---
 
 ## 💰 Business Value
