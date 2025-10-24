@@ -60,7 +60,10 @@ To enable high-quality retrieval locally:
 If the Python dependencies are missing the engine automatically falls back to the legacy
 TF-IDF matcher, so terminal startup remains instant.
 
-Need a standalone loader you can share or double-click? Use `download/claude-workflow-engine-installer.command` – it simply dispatches to the latest installer in this repository, so you always run the current automation.
+Need a standalone loader you can share or double-click? The `download/` directory ships with both variants:
+- `download/install.sh` – shell-friendly wrapper that calls the root installer.
+- `download/claude-workflow-engine-installer.command` – double-clickable launcher for macOS Finder.
+Each script dispatches to the latest `install.sh` in the repo, so you always run the current automation.
 
 ### First Skill Execution
 
