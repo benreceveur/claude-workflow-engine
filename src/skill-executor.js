@@ -16,9 +16,6 @@ const { logSkillExecution, logValidationFailure, logPathTraversalAttempt } = req
 const {
     SkillError,
     SkillErrorCode,
-    ValidationError,
-    SecurityError,
-    TimeoutError,
     ConcurrencyError,
     wrapError
 } = require('./errors/skill-error');
@@ -678,7 +675,7 @@ if (require.main === module) {
     const command = process.argv[2];
 
     switch (command) {
-        case 'execute':
+        case 'execute': {
             const skillName = process.argv[3];
             const contextArg = process.argv[4];
 
@@ -699,19 +696,22 @@ if (require.main === module) {
                     process.exit(1);
                 });
             break;
+        }
 
-        case 'list':
+        case 'list': {
             const skills = executor.listSkills();
             console.log(JSON.stringify(skills, null, 2));
             break;
+        }
 
-        case 'clear-cache':
+        case 'clear-cache': {
             const cacheFiles = fs.readdirSync(executor.cacheDir);
             cacheFiles.forEach(file => {
                 fs.unlinkSync(path.join(executor.cacheDir, file));
             });
             console.log(`Cleared ${cacheFiles.length} cached results`);
             break;
+        }
 
         default:
             console.log(`

@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const { getSkillsDir } = require('./utils/runtime-paths.js');
 
 function safeReadJson(filePath) {

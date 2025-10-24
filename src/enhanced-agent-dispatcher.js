@@ -6,8 +6,6 @@
  * Replaces the basic keyword matching with sophisticated confidence scoring
  */
 
-const fs = require('fs');
-const path = require('path');
 
 class EnhancedAgentDispatcher {
   constructor() {
@@ -182,7 +180,7 @@ class EnhancedAgentDispatcher {
     // Context indicators (file paths, project structure)
     if (context.filePaths) {
       const contextMatches = role.context_indicators.filter(indicator =>
-        context.filePaths.some(path => path.includes(indicator))
+        context.filePaths.some(filePath => filePath.includes(indicator))
       ).length;
 
       score += (contextMatches / role.context_indicators.length) * 0.3;
@@ -284,7 +282,7 @@ class EnhancedAgentDispatcher {
     const command = args[0];
 
     switch (command) {
-      case 'analyze':
+      case 'analyze': {
         const input = args.slice(1).join(' ');
         if (!input) {
           console.error('Usage: enhanced-agent-dispatcher analyze "your input"');
@@ -294,17 +292,20 @@ class EnhancedAgentDispatcher {
         const result = await this.dispatch(input);
         console.log(JSON.stringify(result, null, 2));
         break;
+      }
 
-      case 'test':
+      case 'test': {
         await this.runTests();
         break;
+      }
 
-      case 'agents':
+      case 'agents': {
         console.log('Available agents:');
         Object.keys(this.roleMapping).forEach(agent => {
           console.log(`  ${agent}`);
         });
         break;
+      }
 
       default:
         console.log(`

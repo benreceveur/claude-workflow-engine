@@ -1,0 +1,4 @@
+package.json
+.codacy/**
+codacy-results
+**/*.md

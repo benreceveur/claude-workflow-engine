@@ -341,7 +341,7 @@ class AutoBehaviorSystemWithSkills {
         const command = args[0];
 
         switch (command) {
-            case 'prompt':
+            case 'prompt': {
                 const input = args.slice(1).join(' ');
                 if (!input) {
                     console.error('Usage: auto-behavior-system prompt "your input"');
@@ -351,22 +351,27 @@ class AutoBehaviorSystemWithSkills {
                 const result = await this.processPrompt(input);
                 this.outputPromptResult(result);
                 break;
+            }
 
-            case 'status':
+            case 'status': {
                 this.showStatus();
                 break;
+            }
 
-            case 'config':
+            case 'config': {
                 await this.handleConfigCommand(args.slice(1));
                 break;
+            }
 
-            case 'banner':
+            case 'banner': {
                 this.showBanner();
                 break;
+            }
 
-            case 'test-skill':
+            case 'test-skill': {
                 await this.testSkillDetection();
                 break;
+            }
 
             default:
                 this.showHelp();
@@ -468,11 +473,12 @@ class AutoBehaviorSystemWithSkills {
         const subcommand = args[0];
 
         switch (subcommand) {
-            case 'show':
+            case 'show': {
                 console.log(JSON.stringify(this.config, null, 2));
                 break;
+            }
 
-            case 'update':
+            case 'update': {
                 if (args[1]) {
                     try {
                         const updates = JSON.parse(args[1]);
@@ -484,6 +490,7 @@ class AutoBehaviorSystemWithSkills {
                     }
                 }
                 break;
+            }
 
             default:
                 console.log('Config subcommands: show, update');

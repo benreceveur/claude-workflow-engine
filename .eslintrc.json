@@ -1,0 +1,33 @@
+{
+  "extends": ["eslint:recommended"],
+  "env": {
+    "node": true,
+    "es2021": true,
+    "jest": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
+  "rules": {
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "none",
+        "varsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["tests/**/*.js", "tests/**/*.ts"],
+      "env": {
+        "mocha": true,
+        "jest": true
+      },
+      "rules": {
+        "no-unused-vars": "off"
+      }
+    }
+  ]
+}

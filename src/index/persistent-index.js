@@ -19,7 +19,11 @@ class PersistentVectorIndex {
         this.enabled = FEATURE_FLAGS.persistentIndex;
         this.model = options.model || DEFAULT_MODEL;
         this.scope = sanitizeScope(options.scope || 'global');
-        this.indexPath = path.join(DIRECTORIES.indexRoot, this.model.replace(/[\/]/g, '_'), this.scope);
+        this.indexPath = path.join(
+            DIRECTORIES.indexRoot,
+            this.model.replace(/[/\\]/g, '_'),
+            this.scope
+        );
         this.available = false;
         this.lastError = null;
 

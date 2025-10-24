@@ -688,11 +688,12 @@ if (require.main === module) {
         case 'load':
             console.log(JSON.stringify(manager.getEffectiveMemory(), null, 2));
             break;
-        case 'summary':
+        case 'summary': {
             const summaryOptions = manager.parseSummaryArguments(process.argv.slice(3));
             console.log(manager.generateContextSummary(summaryOptions));
             break;
-        case 'update':
+        }
+        case 'update': {
             const [category, key, value, scope] = process.argv.slice(3);
             try {
                 const parsedValue = JSON.parse(value);
@@ -703,7 +704,8 @@ if (require.main === module) {
                 console.log('Memory updated');
             }
             break;
-        case 'override':
+        }
+        case 'override': {
             const [globalKey, newValue] = process.argv.slice(3);
             try {
                 const parsedValue = JSON.parse(newValue);
@@ -714,12 +716,14 @@ if (require.main === module) {
                 console.log(success ? 'Override created' : 'Failed to create override');
             }
             break;
-        case 'setup-eslint':
+        }
+        case 'setup-eslint': {
             const result = manager.setupESLintForCurrentRepo();
             console.log(result.message);
             process.exit(result.success ? 0 : 1);
             break;
-        case 'rules':
+        }
+        case 'rules': {
             try {
                 const RulesManager = require('./rules-manager.js');
                 const rulesManager = new RulesManager();
@@ -728,7 +732,8 @@ if (require.main === module) {
                 console.error('Error loading rules:', error.message);
             }
             break;
-        case 'query':
+        }
+        case 'query': {
             const query = process.argv.slice(3).join(' ');
             if (!query) {
                 console.log('Usage: node enhanced-memory-manager.js query "your natural language query"');
@@ -744,7 +749,8 @@ if (require.main === module) {
                 console.error('Error executing query:', error.message);
             }
             break;
-        case 'relevant':
+        }
+        case 'relevant': {
             const searchQuery = process.argv[3];
             const limitArg = process.argv[4] ? parseInt(process.argv[4], 10) : undefined;
             if (!searchQuery) {
@@ -760,7 +766,8 @@ if (require.main === module) {
                 console.error('Error searching memory:', error.message);
             }
             break;
-        case 'predict':
+        }
+        case 'predict': {
             const context = JSON.parse(process.argv[3] || '{}');
             const intent = process.argv[4] || '';
             try {
@@ -777,6 +784,7 @@ if (require.main === module) {
                 console.error('Error predicting patterns:', error.message);
             }
             break;
+        }
         default:
             console.log('Usage: node enhanced-memory-manager.js [info|load|summary|update|override|setup-eslint|rules|query|predict]');
             console.log('');
