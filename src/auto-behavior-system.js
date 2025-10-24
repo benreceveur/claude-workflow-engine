@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { getMemoryDir } = require('./utils/runtime-paths.js');
+const SkillRouter = require('./skill-router.js');
 
 class AutoBehaviorSystemWithSkills {
     constructor() {
@@ -18,8 +19,8 @@ class AutoBehaviorSystemWithSkills {
         this.agentDispatcher = null;
         this.memoryManager = null;
         this.skillExecutor = null;
+        this.skillRouter = null;
         this.initializeIntegrations();
-        this.defineSkillPatterns();
     }
 
     loadConfig() {
@@ -78,124 +79,10 @@ class AutoBehaviorSystemWithSkills {
         try {
             const SkillExecutor = require('./skill-executor.js');
             this.skillExecutor = new SkillExecutor();
+            this.skillRouter = new SkillRouter({ skillExecutor: this.skillExecutor });
         } catch (error) {
             console.warn('Skill executor not available');
         }
-    }
-
-    /**
-     * Define patterns for Skill detection
-     */
-    defineSkillPatterns() {
-        this.skillPatterns = {
-            'repo-detection': {
-                keywords: [
-                    'detect repository',
-                    'get repo info',
-                    'repository hash',
-                    'current repo',
-                    'git repository',
-                    'repo context'
-                ],
-                confidence: 0.9,
-                description: 'Detects Git repository and generates unique hash'
-            },
-            'memory-hygiene': {
-                keywords: [
-                    'clean memory',
-                    'validate schema',
-                    'compact memory',
-                    'deduplicate',
-                    'expire stale',
-                    'memory cleanup',
-                    'validate memory',
-                    'merge duplicates'
-                ],
-                confidence: 0.9,
-                description: 'Maintains memory cleanliness and consistency'
-            },
-            'memory-formatting': {
-                keywords: [
-                    'format memory',
-                    'format as markdown',
-                    'format as json',
-                    'memory summary',
-                    'pretty print memory'
-                ],
-                confidence: 0.85,
-                description: 'Formats memory output consistently'
-            },
-            'code-analysis': {
-                keywords: [
-                    'analyze codebase',
-                    'detect frameworks',
-                    'architecture pattern',
-                    'scan files',
-                    'code structure',
-                    'analyze project'
-                ],
-                confidence: 0.85,
-                description: 'Analyzes codebase patterns and architecture'
-            },
-            'schema-validation': {
-                keywords: [
-                    'validate schema',
-                    'check schema',
-                    'schema compliance',
-                    'validate structure',
-                    'memory schema'
-                ],
-                confidence: 0.9,
-                description: 'Validates memory data against schema'
-            },
-            'tech-debt-tracker': {
-                keywords: [
-                    'technical debt',
-                    'tech debt',
-                    'code quality',
-                    'code complexity',
-                    'code duplication',
-                    'refactoring priorities',
-                    'sqale index',
-                    'maintainability index',
-                    'debt metrics'
-                ],
-                confidence: 0.9,
-                description: 'Identifies, measures, and prioritizes technical debt'
-            },
-            'finops-optimizer': {
-                keywords: [
-                    'cloud cost',
-                    'cost optimization',
-                    'finops',
-                    'aws costs',
-                    'azure costs',
-                    'gcp costs',
-                    'cloud spending',
-                    'resource optimization',
-                    'rightsizing',
-                    'reserved instances',
-                    'savings plan'
-                ],
-                confidence: 0.9,
-                description: 'Analyzes and optimizes cloud infrastructure costs'
-            },
-            'ai-code-generator': {
-                keywords: [
-                    'generate code',
-                    'generate boilerplate',
-                    'scaffold',
-                    'crud api',
-                    'generate tests',
-                    'synthetic data',
-                    'code generation',
-                    'boilerplate code',
-                    'api client generation'
-                ],
-                confidence: 0.9,
-                description: 'AI-powered code and test generation'
-            }
-        };
     }
 
     async processPrompt(userInput, context = {}) {
@@ -239,7 +126,7 @@ class AutoBehaviorSystemWithSkills {
         }
 
         // NEW: Check for Skill match first (most efficient)
-        if (this.config.enableSkillsOrchestration && this.skillExecutor) {
+        if (this.config.enableSkillsOrchestration && this.skillRouter) {
             processing.skill_recommendation = await this.checkForSkill(userInput, context);
 
             if (processing.skill_recommendation &&
@@ -286,52 +173,15 @@ class AutoBehaviorSystemWithSkills {
      * Check if user input matches a Skill pattern
      */
     async checkForSkill(input, context = {}) {
-        const inputLower = input.toLowerCase();
-        let bestMatch = null;
-        let highestScore = 0;
-
-        for (const [skillName, pattern] of Object.entries(this.skillPatterns)) {
-            let score = 0;
-            let matchedKeywords = [];
-
-            // Check keyword matches
-            for (const keyword of pattern.keywords) {
-                if (inputLower.includes(keyword.toLowerCase())) {
-                    score += 1;
-                    matchedKeywords.push(keyword);
-                }
-            }
-
-            // Calculate confidence
-            const confidence = (score / pattern.keywords.length) * pattern.confidence;
-
-            if (confidence > highestScore) {
-                highestScore = confidence;
-                bestMatch = {
-                    skill: skillName,
-                    confidence: confidence,
-                    matchedKeywords: matchedKeywords,
-                    description: pattern.description,
-                    reason: `Matched ${matchedKeywords.length} keywords: ${matchedKeywords.slice(0, 3).join(', ')}`
-                };
-            }
+        if (!this.skillRouter) {
+            return null;
         }
 
-        // Check if Skill exists on disk
-        if (bestMatch && this.skillExecutor) {
-            const skillPath = this.skillExecutor.getSkillPath(bestMatch.skill);
-            if (!skillPath) {
-                // Skill pattern matches but Skill not installed
-                bestMatch.available = false;
-                bestMatch.reason += ' (Skill not installed)';
-                bestMatch.confidence = 0; // Force fallback to Agent
-            } else {
-                bestMatch.available = true;
-                bestMatch.path = skillPath;
-            }
+        const result = this.skillRouter.detectSkill(input, context);
+        if (result && result.available) {
+            result.reason = result.reason || `Matched ${result.matchedKeywords.length} keywords`;
         }
-
-        return bestMatch;
+        return result;
     }
 
     applyBehaviorRules(input, processing) {

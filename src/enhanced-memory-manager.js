@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const RepositoryDetector = require('./repo-detector.js');
 const VectorMemoryIndex = require('./vector-memory-index.js');
+const { PersistentVectorIndex, hashDocument } = require('./index/persistent-index.js');
+const { FEATURE_FLAGS } = require('./index/config.js');
 const { getMemoryDir } = require('./utils/runtime-paths.js');
 
 const MAX_PREVIEW_LENGTH = 280;
@@ -15,12 +17,24 @@ class EnhancedMemoryManager {
         this.globalMemoryPath = path.join(this.memoryDir, 'global-memory.json');
         this.currentRepo = this.detector.getCurrentRepository();
         this.repoPaths = this.currentRepo ? this.detector.ensureRepositoryMemory(this.currentRepo) : null;
+        this.scopeKey = this.currentRepo ? `repo-${this.currentRepo.hash}` : 'global';
+        this.persistentIndex = null;
+        this.lastPersistentVersion = null;
         this.cache = {
             version: null,
             effective: null,
             entries: null,
             index: null
         };
+
+        if (FEATURE_FLAGS.persistentIndex) {
+            try {
+                this.persistentIndex = new PersistentVectorIndex({ scope: this.scopeKey });
+            } catch (error) {
+                this.persistentIndex = null;
+                this.lastPersistentVersion = null;
+            }
+        }
     }
 
     loadGlobalMemory() {
@@ -121,6 +135,25 @@ class EnhancedMemoryManager {
         const effective = this.buildEffectiveMemory();
         const entries = this.flattenMemoryEntries(effective.memory);
         const index = new VectorMemoryIndex(entries);
+
+        if (this.persistentIndex && this.persistentIndex.isAvailable()) {
+            if (this.lastPersistentVersion !== version) {
+                const docs = entries.map(entry => ({
+                    id: `${this.scopeKey}:${entry.id}`,
+                    text: entry.text,
+                    metadata: {
+                        path: entry.payload?.path,
+                        preview: entry.payload?.preview,
+                        type: entry.payload?.type,
+                        source: effective.source,
+                    },
+                    hash: hashDocument(entry.text, this.persistentIndex.model),
+                }));
+
+                this.persistentIndex.upsertDocuments(docs);
+                this.lastPersistentVersion = version;
+            }
+        }
 
         this.cache = { version, effective, entries, index };
         return this.cache;
@@ -331,13 +364,28 @@ class EnhancedMemoryManager {
             return [];
         }
 
-        const results = cache.index.query(query, options);
+        const limit = options.limit || 6;
+        let results = [];
 
-        return results.map(result => ({
-            path: result.payload.path,
-            preview: result.payload.preview,
-            score: Number(result.score.toFixed(3)),
-            type: result.payload.type
+        if (this.persistentIndex && this.persistentIndex.isAvailable()) {
+            results = this.persistentIndex.search(query, { limit });
+        }
+
+        if (!results || results.length === 0) {
+            results = cache.index.query(query, { limit });
+            return results.map(result => ({
+                path: result.payload.path,
+                preview: result.payload.preview,
+                score: Number(result.score.toFixed(3)),
+                type: result.payload.type
+            }));
+        }
+
+        return results.map(item => ({
+            path: item.metadata?.path || item.id,
+            preview: item.metadata?.preview,
+            score: Number(item.score.toFixed(3)),
+            type: item.metadata?.type || 'unknown',
         }));
     }
 

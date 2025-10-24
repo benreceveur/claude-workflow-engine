@@ -1,0 +1,50 @@
+{
+  "tech-debt-tracker": {
+    "description": "Analyze and prioritize technical debt across the repository.",
+    "keywords": ["technical debt", "tech debt", "refactor", "code quality", "code smell", "sqale"],
+    "operations": ["scan", "prioritize"],
+    "defaultContext": {"operation": "scan", "project_dir": "."}
+  },
+  "finops-optimizer": {
+    "description": "Inspect cloud usage patterns and surface cost saving opportunities.",
+    "keywords": ["cloud cost", "finops", "aws cost", "gcp cost", "azure cost", "spend optimization"],
+    "operations": ["analyze"],
+    "defaultContext": {"operation": "analyze", "provider": "aws"}
+  },
+  "memory-hygiene": {
+    "description": "Validate and clean workflow engine memory artifacts.",
+    "keywords": ["memory cleanup", "validate memory", "clean memory", "deduplicate memory"],
+    "operations": ["scan", "compact"],
+    "defaultContext": {"operation": "scan"}
+  },
+  "semantic-search": {
+    "description": "Perform natural language code search over the repository.",
+    "keywords": ["semantic search", "code search", "natural language search", "find function"],
+    "operations": ["search"],
+    "defaultContext": {"operation": "search", "query": ""}
+  },
+  "documentation-sync": {
+    "description": "Detect documentation drift between source and docs.",
+    "keywords": ["documentation drift", "sync docs", "update docs", "doc alignment"],
+    "operations": ["scan"],
+    "defaultContext": {"operation": "scan"}
+  },
+  "test-first-change": {
+    "description": "Identify and run relevant tests for a change set.",
+    "keywords": ["find tests", "run tests", "test plan", "testing strategy"],
+    "operations": ["plan", "execute"],
+    "defaultContext": {"operation": "plan"}
+  },
+  "code-formatter": {
+    "description": "Format source files consistently across languages.",
+    "keywords": ["format code", "reformat", "run formatter", "prettier", "black", "clang-format"],
+    "operations": ["format"],
+    "defaultContext": {"operation": "format", "paths": ["."]}
+  },
+  "release-orchestrator": {
+    "description": "Generate release notes and versioning suggestions.",
+    "keywords": ["release plan", "version bump", "changelog", "release notes"],
+    "operations": ["plan", "draft"],
+    "defaultContext": {"operation": "plan"}
+  }
+}

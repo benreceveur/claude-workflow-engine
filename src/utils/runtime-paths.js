@@ -100,9 +100,16 @@ function getLogsDir() {
     return dir;
 }
 
+function getIndexRoot() {
+    const dir = path.join(resolveBaseDir(), 'index');
+    ensureDir(dir);
+    return dir;
+}
+
 module.exports = {
     resolveBaseDir,
     getMemoryDir,
     getSkillsDir,
-    getLogsDir
+    getLogsDir,
+    getIndexRoot,
 };

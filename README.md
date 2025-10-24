@@ -42,6 +42,24 @@ cd claude-workflow-engine
 node src/skill-executor.js list
 ```
 
+
+## 🔧 Persistent Memory Index (Preview)
+
+The workflow engine now ships with an optional file-backed hybrid search stack.
+To enable high-quality retrieval locally:
+
+1. Ensure Python 3.9+ is available.
+2. Install the lightweight embedding runtime:
+   ```bash
+   pip install "sentence-transformers<3" numpy
+   ```
+3. (Optional) export `WORKFLOW_ENGINE_EMBED_MODEL` to pick a different embedding model.
+4. The first query will build a disk cache under `~/.workflow-engine/index/`. Subsequent
+       shells reuse the same data with zero start-up cost.
+
+If the Python dependencies are missing the engine automatically falls back to the legacy
+TF-IDF matcher, so terminal startup remains instant.
+
 Need a standalone loader you can share or double-click? Use `download/claude-workflow-engine-installer.command` – it simply dispatches to the latest installer in this repository, so you always run the current automation.
 
 ### First Skill Execution
