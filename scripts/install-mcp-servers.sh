@@ -1,9 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Install standard MCP servers for Claude Workflow Engine
 # MCP servers provide additional tools and capabilities
 
-set -euo pipefail
+set -eo pipefail
+
+# Check for bash 4+ (for associative arrays)
+if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
+    # Fallback for older bash versions
+    USE_ASSOC_ARRAYS=false
+else
+    USE_ASSOC_ARRAYS=true
+fi
 
 echo "🔌 Installing Standard MCP Servers"
 echo ""
@@ -47,18 +55,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Define standard MCP servers
-declare -A MCP_SERVERS=(
-    ["filesystem"]="@modelcontextprotocol/server-filesystem"
-    ["git"]="@modelcontextprotocol/server-git"
-    ["github"]="@modelcontextprotocol/server-github"
-    ["memory"]="@modelcontextprotocol/server-memory"
-)
-
-# Optional servers (require additional configuration)
-declare -A OPTIONAL_SERVERS=(
-    ["brave-search"]="@modelcontextprotocol/server-brave-search"
-    ["postgres"]="@modelcontextprotocol/server-postgres"
+# Define standard MCP servers (simple list approach for compatibility)
+MCP_SERVER_LIST=(
+    "filesystem:@modelcontextprotocol/server-filesystem"
+    "git:@modelcontextprotocol/server-git"
+    "github:@modelcontextprotocol/server-github"
+    "memory:@modelcontextprotocol/server-memory"
 )
 
 echo "📦 Installing standard MCP servers..."
@@ -85,23 +87,24 @@ install_server() {
     # Check if already installed
     if npm list -g "$package" >/dev/null 2>&1; then
         echo "  ✓ $name already installed"
-        ((INSTALLED_COUNT++))
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
         return 0
     fi
 
     # Install globally with -y flag
     if npm install -g "$package" >/dev/null 2>&1; then
         echo "  ✓ $name installed successfully"
-        ((INSTALLED_COUNT++))
+        INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
     else
         echo "  ✗ $name installation failed (optional, continuing...)"
-        ((FAILED_COUNT++))
+        FAILED_COUNT=$((FAILED_COUNT + 1))
     fi
 }
 
 # Install standard servers
-for server_name in "${!MCP_SERVERS[@]}"; do
-    install_server "$server_name" "${MCP_SERVERS[$server_name]}"
+for server_entry in "${MCP_SERVER_LIST[@]}"; do
+    IFS=':' read -r server_name server_package <<< "$server_entry"
+    install_server "$server_name" "$server_package"
 done
 
 echo ""
