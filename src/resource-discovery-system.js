@@ -47,7 +47,7 @@ class ResourceDiscoverySystem {
             // Save discovery results
             await this.saveDiscoveryResults();
 
-            console.log('\n✅ Discovery complete! Results saved to discovery/resource-inventory.json');
+            console.log('\n✅ Discovery complete! Results saved to discovery/auto-discovered-resources.json');
 
             return this.discoveredResources;
 

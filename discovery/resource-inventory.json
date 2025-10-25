@@ -6,7 +6,7 @@
   },
 
   "mcp_servers": {
-    "discovered_count": 23,
+    "discovered_count": 21,
     "configuration_location": "/Users/llmlite/.mcp.json",
     "available_servers": {
       "context_management": {
@@ -269,7 +269,7 @@
   },
 
   "workflow_engine_skills": {
-    "discovered_count": 32,
+    "discovered_count": 31,
     "configuration_location": "/Users/llmlite/.workflow-engine/skills/",
     "manifest_location": "/Users/llmlite/.workflow-engine/skills/skill-manifest.json",
 

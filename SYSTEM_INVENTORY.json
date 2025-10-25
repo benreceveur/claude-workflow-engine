@@ -513,7 +513,7 @@
       }
     ],
     "undocumented_skills": 24,
-    "action_required": "Update skill-manifest.json with metadata for all 30 skills"
+    "action_required": "Update skill-manifest.json with metadata for all 32 skills"
   },
 
   "agent_dispatcher_mappings": {

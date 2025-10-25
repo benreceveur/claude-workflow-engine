@@ -8,10 +8,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 class SystemDiscovery {
   constructor() {
-    this.workflowHome = process.env.WORKFLOW_ENGINE_HOME || path.join(process.env.HOME, '.workflow-engine');
+    this.workflowHome = process.env.WORKFLOW_ENGINE_HOME || path.join(os.homedir(), '.workflow-engine');
     this.repoRoot = path.join(__dirname, '..');
   }
 

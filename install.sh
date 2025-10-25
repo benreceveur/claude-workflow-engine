@@ -138,6 +138,24 @@ find "$MEMORY_DIR" -maxdepth 1 -type f -name '*.js' -exec chmod +x {} +
 
 SKILL_COUNT=$(find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 
+# Install Python dependencies for vector memory (prevents context sprawl)
+echo ""
+echo "🔍 Installing vector memory dependencies..."
+if [ -f "$PACKAGE_ROOT/scripts/install-dependencies.sh" ]; then
+    bash "$PACKAGE_ROOT/scripts/install-dependencies.sh" || {
+        echo "⚠️  Python dependencies installation failed (optional, continuing...)"
+        echo "   Vector memory will use fallback TF-IDF (may cause context sprawl)"
+    }
+fi
+
+# Install MCP servers
+echo ""
+if [ -f "$PACKAGE_ROOT/scripts/install-mcp-servers.sh" ]; then
+    bash "$PACKAGE_ROOT/scripts/install-mcp-servers.sh" || {
+        echo "⚠️  MCP server installation failed (optional, continuing...)"
+    }
+fi
+
 # Run discovery and integration
 echo ""
 echo "🔍 Discovering and integrating local configurations..."
