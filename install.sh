@@ -138,6 +138,18 @@ find "$MEMORY_DIR" -maxdepth 1 -type f -name '*.js' -exec chmod +x {} +
 
 SKILL_COUNT=$(find "$SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 
+# Run discovery and integration
+echo ""
+echo "🔍 Discovering and integrating local configurations..."
+if command -v node >/dev/null 2>&1; then
+    if [ -f "$PACKAGE_ROOT/scripts/discover-and-integrate.js" ]; then
+        node "$PACKAGE_ROOT/scripts/discover-and-integrate.js" > /dev/null 2>&1 || {
+            echo "⚠️  Discovery script encountered issues (non-critical, continuing...)"
+        }
+        echo "✓ Local skills and agents integrated"
+    fi
+fi
+
 echo ""
 echo "✅ Deployment complete"
 echo "   Home directory : $WORKFLOW_ENGINE_HOME"

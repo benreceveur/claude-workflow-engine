@@ -1,0 +1,1455 @@
+{
+  "discovery_metadata": {
+    "timestamp": "2025-10-25T15:48:05.330Z",
+    "version": "1.0.0",
+    "system": "darwin",
+    "node_version": "v22.21.0"
+  },
+  "resources": {
+    "mcp_servers": {
+      "context7": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@upstash/context7-mcp"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "specialized"
+        ]
+      },
+      "memory": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-memory"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "specialized"
+        ]
+      },
+      "executeautomation-playwright-server": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@executeautomation/playwright-mcp-server"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "browser_automation"
+        ]
+      },
+      "browser-server": {
+        "command": "browser-use-mcp-server",
+        "args": [
+          "run",
+          "server",
+          "--port",
+          "8000",
+          "--stdio",
+          "--proxy-port",
+          "9000"
+        ],
+        "env": {
+          "OPENAI_API_KEY": "your-api-key"
+        },
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "needs_configuration",
+        "categories": [
+          "browser_automation"
+        ]
+      },
+      "postgresql": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-postgres"
+        ],
+        "env": {
+          "POSTGRES_CONNECTION_STRING": "postgresql://user:password@localhost:5432/dbname"
+        },
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "data_sources"
+        ]
+      },
+      "fetch": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-fetch"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "data_sources"
+        ]
+      },
+      "github": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-github"
+        ],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
+        },
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "needs_configuration",
+        "categories": [
+          "development_tools"
+        ]
+      },
+      "DeepGraph Next.js MCP": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-code-graph@latest",
+          "vercel/next.js"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "development_tools"
+        ]
+      },
+      "playwright-server": {
+        "command": "npx",
+        "args": [
+          "@playwright/mcp@latest"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "browser_automation"
+        ]
+      },
+      "filesystem": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem",
+          "/path/to/allowed/files"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "data_sources"
+        ]
+      },
+      "automatalabs-playwright-server": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@automatalabs/mcp-server-playwright"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "browser_automation"
+        ]
+      },
+      "chrome-devtools": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "chrome-devtools-mcp@latest"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "browser_automation"
+        ]
+      },
+      "DeepGraph React MCP": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-code-graph@latest",
+          "facebook/react"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "development_tools"
+        ]
+      },
+      "Figma Dev Mode MCP": {
+        "url": "http://127.0.0.1:3845/mcp",
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "collaboration"
+        ]
+      },
+      "browsermcp": {
+        "command": "npx",
+        "args": [
+          "@browsermcp/mcp@latest"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "browser_automation"
+        ]
+      },
+      "DeepGraph TypeScript MCP": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-code-graph@latest",
+          "microsoft/TypeScript"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "development_tools"
+        ]
+      },
+      "serena": {
+        "command": "/abs/path/to/uv",
+        "args": [
+          "run",
+          "--directory",
+          "/abs/path/to/serena",
+          "serena",
+          "start-mcp-server"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "needs_configuration",
+        "categories": [
+          "specialized"
+        ]
+      },
+      "markitdown": {
+        "command": "docker",
+        "args": [
+          "run",
+          "--rm",
+          "-i",
+          "markitdown-mcp:latest"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "specialized"
+        ]
+      },
+      "DeepGraph Vue MCP": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-code-graph@latest",
+          "vuejs/core"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "development_tools"
+        ]
+      },
+      "huggingface": {
+        "url": "https://huggingface.co/mcp",
+        "headers": {
+          "Authorization": "Bearer <YOUR_HF_TOKEN>"
+        },
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "ai_ml"
+        ]
+      },
+      "terraform": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "hashicorp/terraform-mcp-server:0.2.3"
+        ],
+        "source": "/Users/llmlite/.mcp.json",
+        "status": "configured",
+        "categories": [
+          "infrastructure"
+        ]
+      }
+    },
+    "claude_agents": {
+      "academic-researcher": {
+        "path": "/Users/llmlite/.workflow-engine/agents/academic-researcher.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "agent-overview": {
+        "path": "/Users/llmlite/.workflow-engine/agents/agent-overview.md",
+        "capabilities": [
+          "analyzing research queries to ensure they are clear, specific, and actionable before research begins",
+          "managing comprehensive research projects using the open deep research methodology",
+          "consolidating findings from multiple research sources into a unified, comprehensive analysis"
+        ],
+        "category": "development"
+      },
+      "ai-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/ai-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "ai-ethics-advisor": {
+        "path": "/Users/llmlite/.workflow-engine/agents/ai-ethics-advisor.md",
+        "capabilities": [
+          "ai safety and alignment"
+        ],
+        "category": "testing"
+      },
+      "api-documenter": {
+        "path": "/Users/llmlite/.workflow-engine/agents/api-documenter.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "architect-review": {
+        "path": "/Users/llmlite/.workflow-engine/agents/architect-review.md",
+        "capabilities": [
+          "solid principles, proper layering, and maintainability"
+        ],
+        "category": "development"
+      },
+      "architecture-modernizer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/architecture-modernizer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "backend-architect": {
+        "path": "/Users/llmlite/.workflow-engine/agents/backend-architect.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "business-analyst": {
+        "path": "/Users/llmlite/.workflow-engine/agents/business-analyst.md",
+        "capabilities": [
+          "data-driven decision making"
+        ],
+        "category": "development"
+      },
+      "c-pro": {
+        "path": "/Users/llmlite/.workflow-engine/agents/c-pro.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "changelog-generator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/changelog-generator.md",
+        "capabilities": [],
+        "category": "data"
+      },
+      "cli-ui-designer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/cli-ui-designer.md",
+        "capabilities": [
+          "cli aesthetics, terminal themes, and command-line ux patterns"
+        ],
+        "category": "development"
+      },
+      "cloud-architect": {
+        "path": "/Users/llmlite/.workflow-engine/agents/cloud-architect.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "code-reviewer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/code-reviewer.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "command-expert": {
+        "path": "/Users/llmlite/.workflow-engine/agents/command-expert.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "competitive-intelligence-analyst": {
+        "path": "/Users/llmlite/.workflow-engine/agents/competitive-intelligence-analyst.md",
+        "capabilities": [],
+        "category": "security"
+      },
+      "compliance-specialist": {
+        "path": "/Users/llmlite/.workflow-engine/agents/compliance-specialist.md",
+        "capabilities": [],
+        "category": "security"
+      },
+      "comprehensive-researcher": {
+        "path": "/Users/llmlite/.workflow-engine/agents/comprehensive-researcher.md",
+        "capabilities": [],
+        "category": "data"
+      },
+      "connection-agent": {
+        "path": "/Users/llmlite/.workflow-engine/agents/connection-agent.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "content-curator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/content-curator.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "content-marketer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/content-marketer.md",
+        "capabilities": [
+          "engagement-driven content"
+        ],
+        "category": "data"
+      },
+      "context-manager": {
+        "path": "/Users/llmlite/.workflow-engine/agents/context-manager.md",
+        "capabilities": [
+          "maintaining coherent state across multiple agent interactions and sessions"
+        ],
+        "category": "development"
+      },
+      "data-analyst": {
+        "path": "/Users/llmlite/.workflow-engine/agents/data-analyst.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "data-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/data-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "data-scientist": {
+        "path": "/Users/llmlite/.workflow-engine/agents/data-scientist.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "database-architect": {
+        "path": "/Users/llmlite/.workflow-engine/agents/database-architect.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "database-optimizer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/database-optimizer.md",
+        "capabilities": [],
+        "category": "data"
+      },
+      "debugger": {
+        "path": "/Users/llmlite/.workflow-engine/agents/debugger.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "dependency-manager": {
+        "path": "/Users/llmlite/.workflow-engine/agents/dependency-manager.md",
+        "capabilities": [
+          "dependency analysis, vulnerability scanning, and license compliance"
+        ],
+        "category": "testing"
+      },
+      "deployment-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/deployment-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "devops-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/devops-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "devops-troubleshooter": {
+        "path": "/Users/llmlite/.workflow-engine/agents/devops-troubleshooter.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "error-detective": {
+        "path": "/Users/llmlite/.workflow-engine/agents/error-detective.md",
+        "capabilities": [],
+        "category": "data"
+      },
+      "frontend-developer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/frontend-developer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "fullstack-developer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/fullstack-developer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "git-flow-manager": {
+        "path": "/Users/llmlite/.workflow-engine/agents/git-flow-manager.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "graphql-architect": {
+        "path": "/Users/llmlite/.workflow-engine/agents/graphql-architect.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "graphql-performance-optimizer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/graphql-performance-optimizer.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "javascript-pro": {
+        "path": "/Users/llmlite/.workflow-engine/agents/javascript-pro.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "legal-advisor": {
+        "path": "/Users/llmlite/.workflow-engine/agents/legal-advisor.md",
+        "capabilities": [
+          "technology law and data protection"
+        ],
+        "category": "security"
+      },
+      "llms-maintainer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/llms-maintainer.md",
+        "capabilities": [
+          "generating and maintaining the llms"
+        ],
+        "category": "testing"
+      },
+      "mcp-deployment-orchestrator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/mcp-deployment-orchestrator.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "mcp-expert": {
+        "path": "/Users/llmlite/.workflow-engine/agents/mcp-expert.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "mcp-security-auditor": {
+        "path": "/Users/llmlite/.workflow-engine/agents/mcp-security-auditor.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "ml-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/ml-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "model-evaluator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/model-evaluator.md",
+        "capabilities": [
+          "llm capabilities and limitations"
+        ],
+        "category": "testing"
+      },
+      "monitoring-specialist": {
+        "path": "/Users/llmlite/.workflow-engine/agents/monitoring-specialist.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "network-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/network-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "nextjs-architecture-expert": {
+        "path": "/Users/llmlite/.workflow-engine/agents/nextjs-architecture-expert.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "penetration-tester": {
+        "path": "/Users/llmlite/.workflow-engine/agents/penetration-tester.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "performance-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/performance-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "product-strategist": {
+        "path": "/Users/llmlite/.workflow-engine/agents/product-strategist.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "project-supervisor-orchestrator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/project-supervisor-orchestrator.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "prompt-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/prompt-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "python-pro": {
+        "path": "/Users/llmlite/.workflow-engine/agents/python-pro.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "react-performance-optimization": {
+        "path": "/Users/llmlite/.workflow-engine/agents/react-performance-optimization.md",
+        "capabilities": [],
+        "category": "data"
+      },
+      "react-performance-optimizer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/react-performance-optimizer.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "report-generator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/report-generator.md",
+        "capabilities": [
+          "transforming synthesized research findings into comprehensive, engaging, and well-structured final reports"
+        ],
+        "category": "testing"
+      },
+      "research-brief-generator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/research-brief-generator.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "research-coordinator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/research-coordinator.md",
+        "capabilities": [
+          "strategic research planning and multi-researcher orchestration"
+        ],
+        "category": "development"
+      },
+      "research-orchestrator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/research-orchestrator.md",
+        "capabilities": [
+          "managing comprehensive research projects using the open deep research methodology"
+        ],
+        "category": "testing"
+      },
+      "review-agent": {
+        "path": "/Users/llmlite/.workflow-engine/agents/review-agent.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "rust-pro": {
+        "path": "/Users/llmlite/.workflow-engine/agents/rust-pro.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "search-specialist": {
+        "path": "/Users/llmlite/.workflow-engine/agents/search-specialist.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "security-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/security-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "shell-scripting-pro": {
+        "path": "/Users/llmlite/.workflow-engine/agents/shell-scripting-pro.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "task-decomposition-expert": {
+        "path": "/Users/llmlite/.workflow-engine/agents/task-decomposition-expert.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "technical-researcher": {
+        "path": "/Users/llmlite/.workflow-engine/agents/technical-researcher.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "terraform-specialist": {
+        "path": "/Users/llmlite/.workflow-engine/agents/terraform-specialist.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "test-automator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/test-automator.md",
+        "capabilities": [],
+        "category": "testing"
+      },
+      "test-engineer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/test-engineer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "text-comparison-validator": {
+        "path": "/Users/llmlite/.workflow-engine/agents/text-comparison-validator.md",
+        "capabilities": [],
+        "category": "data"
+      },
+      "typescript-pro": {
+        "path": "/Users/llmlite/.workflow-engine/agents/typescript-pro.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "ui-ux-designer": {
+        "path": "/Users/llmlite/.workflow-engine/agents/ui-ux-designer.md",
+        "capabilities": [],
+        "category": "development"
+      },
+      "web-accessibility-checker": {
+        "path": "/Users/llmlite/.workflow-engine/agents/web-accessibility-checker.md",
+        "capabilities": [],
+        "category": "testing"
+      }
+    },
+    "workflow_skills": {
+      "tech-debt-tracker": {
+        "description": "Analyze and prioritize technical debt across the repository.",
+        "keywords": [
+          "technical debt",
+          "tech debt",
+          "refactor",
+          "code quality",
+          "code smell",
+          "sqale"
+        ],
+        "operations": [
+          "scan",
+          "prioritize"
+        ],
+        "defaultContext": {
+          "operation": "scan",
+          "project_dir": "."
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/tech-debt-tracker",
+        "status": "registered"
+      },
+      "finops-optimizer": {
+        "description": "Inspect cloud usage patterns and surface cost saving opportunities.",
+        "keywords": [
+          "cloud cost",
+          "finops",
+          "aws cost",
+          "gcp cost",
+          "azure cost",
+          "spend optimization"
+        ],
+        "operations": [
+          "analyze"
+        ],
+        "defaultContext": {
+          "operation": "analyze",
+          "provider": "aws"
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/finops-optimizer",
+        "status": "registered"
+      },
+      "memory-hygiene": {
+        "description": "Validate and clean workflow engine memory artifacts.",
+        "keywords": [
+          "memory cleanup",
+          "validate memory",
+          "clean memory",
+          "deduplicate memory"
+        ],
+        "operations": [
+          "scan",
+          "compact"
+        ],
+        "defaultContext": {
+          "operation": "scan"
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/memory-hygiene",
+        "status": "registered"
+      },
+      "semantic-search": {
+        "description": "Perform natural language code search over the repository.",
+        "keywords": [
+          "semantic search",
+          "code search",
+          "natural language search",
+          "find function"
+        ],
+        "operations": [
+          "search"
+        ],
+        "defaultContext": {
+          "operation": "search",
+          "query": ""
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/semantic-search",
+        "status": "registered"
+      },
+      "documentation-sync": {
+        "description": "Detect documentation drift between source and docs.",
+        "keywords": [
+          "documentation drift",
+          "sync docs",
+          "update docs",
+          "doc alignment"
+        ],
+        "operations": [
+          "scan"
+        ],
+        "defaultContext": {
+          "operation": "scan"
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/documentation-sync",
+        "status": "registered"
+      },
+      "test-first-change": {
+        "description": "Identify and run relevant tests for a change set.",
+        "keywords": [
+          "find tests",
+          "run tests",
+          "test plan",
+          "testing strategy"
+        ],
+        "operations": [
+          "plan",
+          "execute"
+        ],
+        "defaultContext": {
+          "operation": "plan"
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/test-first-change",
+        "status": "registered"
+      },
+      "code-formatter": {
+        "description": "Format source files consistently across languages.",
+        "keywords": [
+          "format code",
+          "reformat",
+          "run formatter",
+          "prettier",
+          "black",
+          "clang-format"
+        ],
+        "operations": [
+          "format"
+        ],
+        "defaultContext": {
+          "operation": "format",
+          "paths": [
+            "."
+          ]
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/code-formatter",
+        "status": "registered"
+      },
+      "release-orchestrator": {
+        "description": "Generate release notes and versioning suggestions.",
+        "keywords": [
+          "release plan",
+          "version bump",
+          "changelog",
+          "release notes"
+        ],
+        "operations": [
+          "plan",
+          "draft"
+        ],
+        "defaultContext": {
+          "operation": "plan"
+        },
+        "path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine/skills/release-orchestrator",
+        "status": "registered"
+      },
+      "ai-code-generator": {
+        "path": "/Users/llmlite/.workflow-engine/skills/ai-code-generator",
+        "status": "discovered",
+        "description": "AI Code Generation System"
+      },
+      "api-documentor": {
+        "path": "/Users/llmlite/.workflow-engine/skills/api-documentor",
+        "status": "discovered",
+        "description": "API Documentor Skill"
+      },
+      "artifacts-builder": {
+        "path": "/Users/llmlite/.workflow-engine/skills/artifacts-builder",
+        "status": "discovered",
+        "description": "Artifacts Builder"
+      },
+      "canvas-design": {
+        "path": "/Users/llmlite/.workflow-engine/skills/canvas-design",
+        "status": "discovered",
+        "description": "No description available"
+      },
+      "codebase-navigator": {
+        "path": "/Users/llmlite/.workflow-engine/skills/codebase-navigator",
+        "status": "discovered",
+        "description": "Codebase Navigator Skill"
+      },
+      "common": {
+        "path": "/Users/llmlite/.workflow-engine/skills/common",
+        "status": "discovered",
+        "description": "No description available"
+      },
+      "container-validator": {
+        "path": "/Users/llmlite/.workflow-engine/skills/container-validator",
+        "status": "discovered",
+        "description": "Container Validator Skill"
+      },
+      "database-migrator": {
+        "path": "/Users/llmlite/.workflow-engine/skills/database-migrator",
+        "status": "discovered",
+        "description": "Database Migrator Skill"
+      },
+      "dependency-guardian": {
+        "path": "/Users/llmlite/.workflow-engine/skills/dependency-guardian",
+        "status": "discovered",
+        "description": "Dependency Guardian Skill"
+      },
+      "docx": {
+        "path": "/Users/llmlite/.workflow-engine/skills/docx",
+        "status": "discovered",
+        "description": "DOCX creation, editing, and analysis"
+      },
+      "excel-analysis": {
+        "path": "/Users/llmlite/.workflow-engine/skills/excel-analysis",
+        "status": "discovered",
+        "description": "Excel Analysis"
+      },
+      "git-commit-helper": {
+        "path": "/Users/llmlite/.workflow-engine/skills/git-commit-helper",
+        "status": "discovered",
+        "description": "Git Commit Helper"
+      },
+      "incident-triage": {
+        "path": "/Users/llmlite/.workflow-engine/skills/incident-triage",
+        "status": "discovered",
+        "description": "Incident Triage Skill"
+      },
+      "mcp-builder": {
+        "path": "/Users/llmlite/.workflow-engine/skills/mcp-builder",
+        "status": "discovered",
+        "description": "MCP Server Development Guide"
+      },
+      "pdf-anthropic": {
+        "path": "/Users/llmlite/.workflow-engine/skills/pdf-anthropic",
+        "status": "discovered",
+        "description": "PDF Processing Guide"
+      },
+      "pdf-processing-pro": {
+        "path": "/Users/llmlite/.workflow-engine/skills/pdf-processing-pro",
+        "status": "discovered",
+        "description": "PDF Processing Pro"
+      },
+      "performance-profiler": {
+        "path": "/Users/llmlite/.workflow-engine/skills/performance-profiler",
+        "status": "discovered",
+        "description": "Performance Profiler Skill"
+      },
+      "pptx": {
+        "path": "/Users/llmlite/.workflow-engine/skills/pptx",
+        "status": "discovered",
+        "description": "PPTX creation, editing, and analysis"
+      },
+      "pr-author-reviewer": {
+        "path": "/Users/llmlite/.workflow-engine/skills/pr-author-reviewer",
+        "status": "discovered",
+        "description": "PR Author and Reviewer Skill"
+      },
+      "security-scanner": {
+        "path": "/Users/llmlite/.workflow-engine/skills/security-scanner",
+        "status": "discovered",
+        "description": "Security Scanner Skill"
+      },
+      "skill-creator": {
+        "path": "/Users/llmlite/.workflow-engine/skills/skill-creator",
+        "status": "discovered",
+        "description": "Skill Creator"
+      },
+      "webapp-testing": {
+        "path": "/Users/llmlite/.workflow-engine/skills/webapp-testing",
+        "status": "discovered",
+        "description": "Web Application Testing"
+      },
+      "xlsx": {
+        "path": "/Users/llmlite/.workflow-engine/skills/xlsx",
+        "status": "discovered",
+        "description": "Requirements for Outputs"
+      }
+    },
+    "integration_mappings": {
+      "skill_agent_mappings": {
+        "tech-debt-tracker": [
+          "code-reviewer",
+          "technical-researcher"
+        ],
+        "finops-optimizer": [],
+        "memory-hygiene": [],
+        "semantic-search": [],
+        "documentation-sync": [],
+        "test-first-change": [
+          "test-engineer",
+          "test-automator"
+        ],
+        "code-formatter": [],
+        "release-orchestrator": [
+          "deployment-engineer",
+          "devops-engineer"
+        ],
+        "ai-code-generator": [],
+        "api-documentor": [
+          "api-documenter",
+          "backend-architect"
+        ],
+        "artifacts-builder": [],
+        "canvas-design": [],
+        "codebase-navigator": [],
+        "common": [],
+        "container-validator": [],
+        "database-migrator": [
+          "database-architect",
+          "data-engineer"
+        ],
+        "dependency-guardian": [],
+        "docx": [],
+        "excel-analysis": [],
+        "git-commit-helper": [],
+        "incident-triage": [],
+        "mcp-builder": [],
+        "pdf-anthropic": [],
+        "pdf-processing-pro": [],
+        "performance-profiler": [
+          "performance-engineer",
+          "devops-engineer"
+        ],
+        "pptx": [],
+        "pr-author-reviewer": [],
+        "security-scanner": [
+          "security-engineer",
+          "penetration-tester"
+        ],
+        "skill-creator": [],
+        "webapp-testing": [
+          "test-engineer",
+          "test-automator"
+        ],
+        "xlsx": []
+      },
+      "mcp_skill_mappings": {
+        "context7": [],
+        "memory": [],
+        "executeautomation-playwright-server": [
+          "webapp-testing",
+          "test-first-change"
+        ],
+        "browser-server": [],
+        "postgresql": [
+          "database-migrator"
+        ],
+        "fetch": [],
+        "github": [
+          "git-commit-helper",
+          "pr-author-reviewer",
+          "release-orchestrator"
+        ],
+        "DeepGraph Next.js MCP": [],
+        "playwright-server": [
+          "webapp-testing",
+          "test-first-change"
+        ],
+        "filesystem": [
+          "codebase-navigator",
+          "documentation-sync"
+        ],
+        "automatalabs-playwright-server": [
+          "webapp-testing",
+          "test-first-change"
+        ],
+        "chrome-devtools": [],
+        "DeepGraph React MCP": [],
+        "Figma Dev Mode MCP": [],
+        "browsermcp": [],
+        "DeepGraph TypeScript MCP": [],
+        "serena": [],
+        "markitdown": [],
+        "DeepGraph Vue MCP": [],
+        "huggingface": [],
+        "terraform": [
+          "finops-optimizer"
+        ]
+      },
+      "agent_mcp_mappings": {
+        "academic-researcher": [],
+        "agent-overview": [],
+        "ai-engineer": [],
+        "ai-ethics-advisor": [],
+        "api-documenter": [],
+        "architect-review": [],
+        "architecture-modernizer": [],
+        "backend-architect": [],
+        "business-analyst": [],
+        "c-pro": [],
+        "changelog-generator": [],
+        "cli-ui-designer": [],
+        "cloud-architect": [],
+        "code-reviewer": [],
+        "command-expert": [],
+        "competitive-intelligence-analyst": [],
+        "compliance-specialist": [],
+        "comprehensive-researcher": [],
+        "connection-agent": [],
+        "content-curator": [],
+        "content-marketer": [],
+        "context-manager": [],
+        "data-analyst": [
+          "postgresql",
+          "filesystem"
+        ],
+        "data-engineer": [
+          "postgresql",
+          "filesystem"
+        ],
+        "data-scientist": [
+          "postgresql",
+          "filesystem"
+        ],
+        "database-architect": [
+          "postgresql",
+          "filesystem"
+        ],
+        "database-optimizer": [
+          "postgresql",
+          "filesystem"
+        ],
+        "debugger": [],
+        "dependency-manager": [],
+        "deployment-engineer": [],
+        "devops-engineer": [
+          "terraform",
+          "github",
+          "docker"
+        ],
+        "devops-troubleshooter": [
+          "terraform",
+          "github",
+          "docker"
+        ],
+        "error-detective": [],
+        "frontend-developer": [
+          "DeepGraph React MCP",
+          "chrome-devtools"
+        ],
+        "fullstack-developer": [],
+        "git-flow-manager": [],
+        "graphql-architect": [],
+        "graphql-performance-optimizer": [],
+        "javascript-pro": [],
+        "legal-advisor": [],
+        "llms-maintainer": [],
+        "mcp-deployment-orchestrator": [],
+        "mcp-expert": [],
+        "mcp-security-auditor": [
+          "github",
+          "filesystem"
+        ],
+        "ml-engineer": [],
+        "model-evaluator": [],
+        "monitoring-specialist": [],
+        "network-engineer": [],
+        "nextjs-architecture-expert": [],
+        "penetration-tester": [
+          "playwright",
+          "browser-server"
+        ],
+        "performance-engineer": [],
+        "product-strategist": [],
+        "project-supervisor-orchestrator": [],
+        "prompt-engineer": [],
+        "python-pro": [],
+        "react-performance-optimization": [],
+        "react-performance-optimizer": [],
+        "report-generator": [],
+        "research-brief-generator": [],
+        "research-coordinator": [],
+        "research-orchestrator": [],
+        "review-agent": [],
+        "rust-pro": [],
+        "search-specialist": [],
+        "security-engineer": [
+          "github",
+          "filesystem"
+        ],
+        "shell-scripting-pro": [],
+        "task-decomposition-expert": [],
+        "technical-researcher": [],
+        "terraform-specialist": [],
+        "test-automator": [
+          "playwright",
+          "browser-server"
+        ],
+        "test-engineer": [
+          "playwright",
+          "browser-server"
+        ],
+        "text-comparison-validator": [],
+        "typescript-pro": [],
+        "ui-ux-designer": [],
+        "web-accessibility-checker": []
+      },
+      "orchestration_patterns": {
+        "common_workflows": [
+          {
+            "name": "Full Stack Development",
+            "agents": [
+              "frontend-developer",
+              "backend-architect",
+              "database-architect"
+            ],
+            "skills": [
+              "ai-code-generator",
+              "api-documentor",
+              "database-migrator"
+            ],
+            "mcp": [
+              "github",
+              "postgresql",
+              "DeepGraph React MCP"
+            ]
+          },
+          {
+            "name": "DevOps Pipeline",
+            "agents": [
+              "devops-engineer",
+              "deployment-engineer"
+            ],
+            "skills": [
+              "release-orchestrator",
+              "container-validator"
+            ],
+            "mcp": [
+              "github",
+              "terraform",
+              "docker"
+            ]
+          },
+          {
+            "name": "Security Audit",
+            "agents": [
+              "security-engineer",
+              "penetration-tester"
+            ],
+            "skills": [
+              "security-scanner",
+              "dependency-guardian"
+            ],
+            "mcp": [
+              "github",
+              "filesystem"
+            ]
+          },
+          {
+            "name": "Testing Suite",
+            "agents": [
+              "test-engineer",
+              "test-automator"
+            ],
+            "skills": [
+              "test-first-change",
+              "webapp-testing"
+            ],
+            "mcp": [
+              "playwright-server",
+              "browser-server",
+              "chrome-devtools"
+            ]
+          }
+        ],
+        "resource_dependencies": {
+          "skills_requiring_mcp": {
+            "git-commit-helper": [
+              "github"
+            ],
+            "pr-author-reviewer": [
+              "github"
+            ],
+            "database-migrator": [
+              "postgresql"
+            ],
+            "webapp-testing": [
+              "playwright-server",
+              "browser-server"
+            ],
+            "codebase-navigator": [
+              "filesystem"
+            ]
+          },
+          "agents_requiring_skills": {
+            "devops-engineer": [
+              "release-orchestrator",
+              "container-validator"
+            ],
+            "test-engineer": [
+              "test-first-change",
+              "webapp-testing"
+            ],
+            "security-engineer": [
+              "security-scanner",
+              "dependency-guardian"
+            ],
+            "data-engineer": [
+              "database-migrator",
+              "finops-optimizer"
+            ]
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "unconfigured_mcp": [
+        {
+          "name": "browser-server",
+          "reason": "Missing API keys or configuration",
+          "action": "Configure browser-server in ~/.mcp.json"
+        },
+        {
+          "name": "github",
+          "reason": "Missing API keys or configuration",
+          "action": "Configure github in ~/.mcp.json"
+        },
+        {
+          "name": "serena",
+          "reason": "Missing API keys or configuration",
+          "action": "Configure serena in ~/.mcp.json"
+        }
+      ],
+      "missing_integrations": [
+        {
+          "type": "skill_agent",
+          "resource": "finops-optimizer",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "memory-hygiene",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "semantic-search",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "documentation-sync",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "code-formatter",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "ai-code-generator",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "artifacts-builder",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "canvas-design",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "codebase-navigator",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "common",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "container-validator",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "dependency-guardian",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "docx",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "excel-analysis",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "git-commit-helper",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "incident-triage",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "mcp-builder",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "pdf-anthropic",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "pdf-processing-pro",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "pptx",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "pr-author-reviewer",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "skill-creator",
+          "suggestion": "Consider adding agent mapping for this skill"
+        },
+        {
+          "type": "skill_agent",
+          "resource": "xlsx",
+          "suggestion": "Consider adding agent mapping for this skill"
+        }
+      ],
+      "optimization_opportunities": [
+        {
+          "area": "Resource Deduplication",
+          "description": "Multiple MCP servers provide similar functionality",
+          "examples": [
+            "playwright-server",
+            "browser-server",
+            "automatalabs-playwright-server"
+          ]
+        },
+        {
+          "area": "Skill Consolidation",
+          "description": "Some skills could be merged for better efficiency",
+          "examples": [
+            "pdf-anthropic",
+            "pdf-processing-pro"
+          ]
+        }
+      ],
+      "suggested_additions": [
+        {
+          "type": "skill",
+          "name": "monitoring-dashboard",
+          "reason": "No monitoring skill available"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_mcp_servers": 21,
+    "total_agents": 75,
+    "total_skills": 31,
+    "configured_mcp": 18,
+    "unconfigured_mcp": 3
+  }
+}

@@ -1,0 +1,379 @@
+{
+  "discovery_metadata": {
+    "discovery_date": "2025-10-25",
+    "system_path": "/Users/llmlite/Documents/GitHub/claude-workflow-engine",
+    "discovery_version": "1.0.0"
+  },
+
+  "mcp_servers": {
+    "discovered_count": 23,
+    "configuration_location": "/Users/llmlite/.mcp.json",
+    "available_servers": {
+      "context_management": {
+        "context7": {
+          "command": "npx",
+          "args": ["-y", "@upstash/context7-mcp"],
+          "description": "Context management MCP server",
+          "status": "configured"
+        },
+        "memory": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-memory"],
+          "description": "Memory server for persistent context",
+          "status": "configured"
+        }
+      },
+
+      "browser_automation": {
+        "executeautomation-playwright-server": {
+          "command": "npx",
+          "args": ["-y", "@executeautomation/playwright-mcp-server"],
+          "description": "Playwright automation server",
+          "status": "configured"
+        },
+        "browser-server": {
+          "command": "browser-use-mcp-server",
+          "description": "Browser automation MCP server",
+          "status": "configured",
+          "requires_env": ["OPENAI_API_KEY"]
+        },
+        "playwright-server": {
+          "command": "npx",
+          "args": ["@playwright/mcp@latest"],
+          "description": "Playwright MCP server",
+          "status": "configured"
+        },
+        "automatalabs-playwright-server": {
+          "command": "npx",
+          "args": ["-y", "@automatalabs/mcp-server-playwright"],
+          "description": "Automata Labs Playwright server",
+          "status": "configured"
+        },
+        "chrome-devtools": {
+          "command": "npx",
+          "args": ["-y", "chrome-devtools-mcp@latest"],
+          "description": "Chrome DevTools MCP integration",
+          "status": "configured"
+        },
+        "browsermcp": {
+          "command": "npx",
+          "args": ["@browsermcp/mcp@latest"],
+          "description": "Browser MCP integration",
+          "status": "configured"
+        }
+      },
+
+      "data_sources": {
+        "postgresql": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-postgres"],
+          "description": "PostgreSQL database integration",
+          "status": "configured",
+          "requires_env": ["POSTGRES_CONNECTION_STRING"]
+        },
+        "fetch": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-fetch"],
+          "description": "HTTP fetch capabilities",
+          "status": "configured"
+        },
+        "filesystem": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/files"],
+          "description": "Filesystem access server",
+          "status": "needs_configuration"
+        }
+      },
+
+      "development_tools": {
+        "github": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-github"],
+          "description": "GitHub integration",
+          "status": "configured",
+          "requires_env": ["GITHUB_PERSONAL_ACCESS_TOKEN"]
+        },
+        "DeepGraph Next.js MCP": {
+          "command": "npx",
+          "args": ["-y", "mcp-code-graph@latest", "vercel/next.js"],
+          "description": "Next.js code graph analysis",
+          "status": "configured"
+        },
+        "DeepGraph React MCP": {
+          "command": "npx",
+          "args": ["-y", "mcp-code-graph@latest", "facebook/react"],
+          "description": "React code graph analysis",
+          "status": "configured"
+        },
+        "DeepGraph TypeScript MCP": {
+          "command": "npx",
+          "args": ["-y", "mcp-code-graph@latest", "microsoft/TypeScript"],
+          "description": "TypeScript code graph analysis",
+          "status": "configured"
+        },
+        "DeepGraph Vue MCP": {
+          "command": "npx",
+          "args": ["-y", "mcp-code-graph@latest", "vuejs/core"],
+          "description": "Vue.js code graph analysis",
+          "status": "configured"
+        }
+      },
+
+      "infrastructure": {
+        "terraform": {
+          "command": "docker",
+          "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server:0.2.3"],
+          "description": "Terraform infrastructure as code",
+          "status": "configured",
+          "requires": ["docker"]
+        }
+      },
+
+      "specialized": {
+        "serena": {
+          "command": "/abs/path/to/uv",
+          "description": "Serena MCP server",
+          "status": "needs_configuration"
+        },
+        "markitdown": {
+          "command": "docker",
+          "args": ["run", "--rm", "-i", "markitdown-mcp:latest"],
+          "description": "Markdown processing server",
+          "status": "configured",
+          "requires": ["docker"]
+        },
+        "huggingface": {
+          "url": "https://huggingface.co/mcp",
+          "description": "Hugging Face model integration",
+          "status": "configured",
+          "requires_env": ["HF_TOKEN"]
+        },
+        "Figma Dev Mode MCP": {
+          "url": "http://127.0.0.1:3845/mcp",
+          "description": "Figma development mode integration",
+          "status": "configured"
+        }
+      }
+    },
+
+    "current_claude_code_tools": {
+      "mcp__ide__getDiagnostics": {
+        "description": "Get IDE diagnostics and errors",
+        "available": true
+      },
+      "mcp__ide__executeCode": {
+        "description": "Execute code in IDE context",
+        "available": true
+      }
+    }
+  },
+
+  "claude_code_agents": {
+    "discovered_count": 75,
+    "configuration_location": "/Users/llmlite/.claude/agents/",
+    "agent_categories": {
+      "development": {
+        "frontend-developer": "Frontend development with React, Vue, Angular expertise",
+        "backend-architect": "Backend architecture and API design",
+        "fullstack-developer": "Full-stack application development",
+        "database-architect": "Database design and optimization",
+        "api-documenter": "API documentation generation",
+        "graphql-architect": "GraphQL API design and optimization",
+        "nextjs-architecture-expert": "Next.js application architecture"
+      },
+
+      "languages": {
+        "python-pro": "Python development expertise",
+        "javascript-pro": "JavaScript development expertise",
+        "typescript-pro": "TypeScript development expertise",
+        "rust-pro": "Rust development expertise",
+        "c-pro": "C/C++ development expertise"
+      },
+
+      "infrastructure": {
+        "devops-engineer": "DevOps and CI/CD pipelines",
+        "cloud-architect": "Cloud infrastructure design",
+        "terraform-specialist": "Infrastructure as code with Terraform",
+        "deployment-engineer": "Application deployment and release",
+        "monitoring-specialist": "System monitoring and observability",
+        "network-engineer": "Network architecture and configuration"
+      },
+
+      "quality": {
+        "test-engineer": "Comprehensive testing strategies",
+        "test-automator": "Test automation implementation",
+        "security-engineer": "Security analysis and implementation",
+        "penetration-tester": "Security penetration testing",
+        "code-reviewer": "Code review and quality assessment",
+        "performance-engineer": "Performance optimization"
+      },
+
+      "data": {
+        "data-scientist": "Data science and machine learning",
+        "data-analyst": "Data analysis and visualization",
+        "data-engineer": "Data pipeline and ETL development",
+        "ml-engineer": "Machine learning engineering"
+      },
+
+      "specialized": {
+        "mcp-expert": "MCP server configuration and development",
+        "mcp-deployment-orchestrator": "MCP deployment strategies",
+        "mcp-security-auditor": "MCP security auditing",
+        "ai-engineer": "AI/ML system development",
+        "ai-ethics-advisor": "AI ethics and compliance"
+      },
+
+      "research": {
+        "academic-researcher": "Academic research and citations",
+        "technical-researcher": "Technical research and analysis",
+        "competitive-intelligence-analyst": "Market and competitive analysis",
+        "comprehensive-researcher": "Comprehensive research projects",
+        "research-coordinator": "Research project coordination",
+        "research-orchestrator": "Research workflow orchestration"
+      },
+
+      "productivity": {
+        "project-supervisor-orchestrator": "Project supervision and coordination",
+        "task-decomposition-expert": "Task breakdown and planning",
+        "dependency-manager": "Dependency management",
+        "changelog-generator": "Release notes and changelogs",
+        "report-generator": "Report generation and formatting"
+      },
+
+      "design": {
+        "ui-ux-designer": "UI/UX design principles",
+        "cli-ui-designer": "CLI interface design",
+        "web-accessibility-checker": "Web accessibility compliance"
+      },
+
+      "content": {
+        "content-marketer": "Content marketing strategies",
+        "content-curator": "Content curation and organization",
+        "business-analyst": "Business analysis and requirements"
+      },
+
+      "specialized_tools": {
+        "shell-scripting-pro": "Shell scripting expertise",
+        "git-flow-manager": "Git workflow management",
+        "error-detective": "Error diagnosis and debugging",
+        "debugger": "Advanced debugging techniques",
+        "prompt-engineer": "Prompt engineering for AI systems"
+      },
+
+      "team_coordination": {
+        "review-agent": "Review coordination and management",
+        "connection-agent": "Inter-agent connection management",
+        "context-manager": "Context management across agents"
+      }
+    }
+  },
+
+  "workflow_engine_skills": {
+    "discovered_count": 32,
+    "configuration_location": "/Users/llmlite/.workflow-engine/skills/",
+    "manifest_location": "/Users/llmlite/.workflow-engine/skills/skill-manifest.json",
+
+    "registered_skills": {
+      "tech-debt-tracker": "Analyze and prioritize technical debt",
+      "finops-optimizer": "Cloud cost optimization",
+      "memory-hygiene": "Workflow engine memory management",
+      "semantic-search": "Natural language code search",
+      "documentation-sync": "Documentation drift detection",
+      "test-first-change": "Test planning and execution",
+      "code-formatter": "Multi-language code formatting",
+      "release-orchestrator": "Release planning and versioning"
+    },
+
+    "available_skills": [
+      "ai-code-generator",
+      "api-documentor",
+      "artifacts-builder",
+      "canvas-design",
+      "code-formatter",
+      "codebase-navigator",
+      "container-validator",
+      "database-migrator",
+      "dependency-guardian",
+      "documentation-sync",
+      "docx",
+      "excel-analysis",
+      "finops-optimizer",
+      "git-commit-helper",
+      "incident-triage",
+      "mcp-builder",
+      "memory-hygiene",
+      "pdf-anthropic",
+      "pdf-processing-pro",
+      "performance-profiler",
+      "pptx",
+      "pr-author-reviewer",
+      "release-orchestrator",
+      "security-scanner",
+      "semantic-search",
+      "skill-creator",
+      "tech-debt-tracker",
+      "test-first-change",
+      "webapp-testing",
+      "xlsx"
+    ],
+
+    "skill_categories": {
+      "document_processing": ["docx", "pptx", "xlsx", "pdf-anthropic", "pdf-processing-pro"],
+      "development_tools": ["ai-code-generator", "api-documentor", "code-formatter", "codebase-navigator"],
+      "quality_assurance": ["test-first-change", "webapp-testing", "security-scanner", "container-validator"],
+      "operations": ["finops-optimizer", "performance-profiler", "incident-triage", "memory-hygiene"],
+      "collaboration": ["pr-author-reviewer", "git-commit-helper", "release-orchestrator"],
+      "analysis": ["tech-debt-tracker", "semantic-search", "excel-analysis", "dependency-guardian"],
+      "documentation": ["documentation-sync", "api-documentor"],
+      "meta_skills": ["skill-creator", "mcp-builder", "artifacts-builder", "canvas-design"]
+    }
+  },
+
+  "integration_points": {
+    "skill_to_agent_mapping": {
+      "tech-debt-tracker": ["code-reviewer", "technical-researcher"],
+      "finops-optimizer": ["cloud-architect", "data-analyst"],
+      "documentation-sync": ["api-documenter", "technical-researcher"],
+      "test-first-change": ["test-engineer", "test-automator"],
+      "security-scanner": ["security-engineer", "penetration-tester"],
+      "release-orchestrator": ["deployment-engineer", "changelog-generator"]
+    },
+
+    "mcp_to_skill_mapping": {
+      "github": ["pr-author-reviewer", "git-commit-helper", "release-orchestrator"],
+      "postgresql": ["database-migrator", "data-analyst"],
+      "filesystem": ["codebase-navigator", "documentation-sync"],
+      "fetch": ["api-documentor", "webapp-testing"]
+    },
+
+    "agent_to_mcp_mapping": {
+      "devops-engineer": ["terraform", "github", "docker"],
+      "data-engineer": ["postgresql", "filesystem"],
+      "frontend-developer": ["DeepGraph React MCP", "DeepGraph Next.js MCP", "chrome-devtools"],
+      "test-engineer": ["playwright-server", "browser-server", "chrome-devtools"]
+    }
+  },
+
+  "recommendations": {
+    "high_priority": [
+      "Create unified discovery service for automatic resource detection",
+      "Implement skill-agent-mcp orchestration layer",
+      "Add configuration validation and health checks",
+      "Create resource compatibility matrix"
+    ],
+
+    "medium_priority": [
+      "Develop auto-configuration for unconfigured MCP servers",
+      "Create skill recommendation engine based on project context",
+      "Implement agent capability scoring system",
+      "Add resource usage analytics"
+    ],
+
+    "low_priority": [
+      "Create visual resource dependency graph",
+      "Implement resource versioning system",
+      "Add performance benchmarking for each resource",
+      "Develop resource marketplace integration"
+    ]
+  }
+}

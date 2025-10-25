@@ -1,0 +1,182 @@
+{
+  "tech-debt-tracker": {
+    "description": "Analyze and prioritize technical debt across the repository.",
+    "keywords": ["technical debt", "tech debt", "refactor", "code quality", "code smell", "sqale"],
+    "operations": ["scan", "prioritize"],
+    "defaultContext": {"operation": "scan", "project_dir": "."}
+  },
+  "finops-optimizer": {
+    "description": "Inspect cloud usage patterns and surface cost saving opportunities.",
+    "keywords": ["cloud cost", "finops", "aws cost", "gcp cost", "azure cost", "spend optimization"],
+    "operations": ["analyze"],
+    "defaultContext": {"operation": "analyze", "provider": "aws"}
+  },
+  "memory-hygiene": {
+    "description": "Validate and clean workflow engine memory artifacts.",
+    "keywords": ["memory cleanup", "validate memory", "clean memory", "deduplicate memory"],
+    "operations": ["scan", "compact"],
+    "defaultContext": {"operation": "scan"}
+  },
+  "semantic-search": {
+    "description": "Perform natural language code search over the repository.",
+    "keywords": ["semantic search", "code search", "natural language search", "find function"],
+    "operations": ["search"],
+    "defaultContext": {"operation": "search", "query": ""}
+  },
+  "documentation-sync": {
+    "description": "Detect documentation drift between source and docs.",
+    "keywords": ["documentation drift", "sync docs", "update docs", "doc alignment"],
+    "operations": ["scan"],
+    "defaultContext": {"operation": "scan"}
+  },
+  "test-first-change": {
+    "description": "Identify and run relevant tests for a change set.",
+    "keywords": ["find tests", "run tests", "test plan", "testing strategy"],
+    "operations": ["plan", "execute"],
+    "defaultContext": {"operation": "plan"}
+  },
+  "code-formatter": {
+    "description": "Format source files consistently across languages.",
+    "keywords": ["format code", "reformat", "run formatter", "prettier", "black", "clang-format"],
+    "operations": ["format"],
+    "defaultContext": {"operation": "format", "paths": ["."]}
+  },
+  "release-orchestrator": {
+    "description": "Generate release notes and versioning suggestions.",
+    "keywords": ["release plan", "version bump", "changelog", "release notes"],
+    "operations": ["plan", "draft"],
+    "defaultContext": {"operation": "plan"}
+  },
+  "ai-code-generator": {
+    "description": "Generate code using AI with context-aware templates.",
+    "keywords": ["generate code", "ai code", "code generation", "scaffold", "boilerplate"],
+    "operations": ["generate", "scaffold"],
+    "defaultContext": {"operation": "generate"}
+  },
+  "api-documentor": {
+    "description": "Automatically document APIs with OpenAPI/Swagger specs.",
+    "keywords": ["api docs", "swagger", "openapi", "document api", "api documentation"],
+    "operations": ["generate", "update"],
+    "defaultContext": {"operation": "generate"}
+  },
+  "codebase-navigator": {
+    "description": "Navigate and analyze codebase structure and dependencies.",
+    "keywords": ["explore code", "codebase structure", "dependency graph", "code navigation"],
+    "operations": ["analyze", "navigate"],
+    "defaultContext": {"operation": "analyze"}
+  },
+  "container-validator": {
+    "description": "Validate Docker containers and Kubernetes configurations.",
+    "keywords": ["docker validation", "kubernetes validate", "container check", "k8s"],
+    "operations": ["validate", "lint"],
+    "defaultContext": {"operation": "validate"}
+  },
+  "database-migrator": {
+    "description": "Generate and manage database migrations safely.",
+    "keywords": ["database migration", "schema change", "db migrate", "migration script"],
+    "operations": ["generate", "validate", "execute"],
+    "defaultContext": {"operation": "generate"}
+  },
+  "dependency-guardian": {
+    "description": "Monitor and manage project dependencies and security vulnerabilities.",
+    "keywords": ["dependency check", "npm audit", "vulnerability scan", "outdated packages"],
+    "operations": ["audit", "update"],
+    "defaultContext": {"operation": "audit"}
+  },
+  "incident-triage": {
+    "description": "Faster on-call handoffs and better postmortems with triage SOPs.",
+    "keywords": ["incident", "triage", "on-call", "postmortem", "incident response"],
+    "operations": ["triage", "analyze", "postmortem"],
+    "defaultContext": {"operation": "triage"}
+  },
+  "performance-profiler": {
+    "description": "Profile application performance and identify bottlenecks.",
+    "keywords": ["performance", "profiling", "bottleneck", "slow queries", "optimization"],
+    "operations": ["profile", "analyze"],
+    "defaultContext": {"operation": "profile"}
+  },
+  "pr-author-reviewer": {
+    "description": "Raise PR quality with templates, checklists, and security reviews.",
+    "keywords": ["pull request", "pr review", "code review", "pr template"],
+    "operations": ["review", "template"],
+    "defaultContext": {"operation": "review"}
+  },
+  "security-scanner": {
+    "description": "Scan codebase for security vulnerabilities and compliance issues.",
+    "keywords": ["security scan", "vulnerability", "security audit", "sast"],
+    "operations": ["scan", "report"],
+    "defaultContext": {"operation": "scan"}
+  },
+  "git-commit-helper": {
+    "description": "Generate conventional commit messages from code changes.",
+    "keywords": ["git commit", "commit message", "conventional commits"],
+    "operations": ["generate"],
+    "defaultContext": {"operation": "generate"}
+  },
+  "skill-creator": {
+    "description": "Create new workflow engine skills with templates and scaffolding.",
+    "keywords": ["create skill", "new skill", "skill template"],
+    "operations": ["create", "scaffold"],
+    "defaultContext": {"operation": "create"}
+  },
+  "mcp-builder": {
+    "description": "Build and deploy Model Context Protocol (MCP) servers.",
+    "keywords": ["mcp server", "build mcp", "mcp deployment"],
+    "operations": ["build", "deploy"],
+    "defaultContext": {"operation": "build"}
+  },
+  "artifacts-builder": {
+    "description": "Build and package deployment artifacts.",
+    "keywords": ["build artifacts", "package", "deployment package"],
+    "operations": ["build", "package"],
+    "defaultContext": {"operation": "build"}
+  },
+  "canvas-design": {
+    "description": "Design UI mockups and wireframes with canvas tools.",
+    "keywords": ["ui design", "wireframe", "mockup", "canvas"],
+    "operations": ["design", "export"],
+    "defaultContext": {"operation": "design"}
+  },
+  "webapp-testing": {
+    "description": "Automated web application testing with Playwright/Selenium.",
+    "keywords": ["web testing", "e2e testing", "playwright", "selenium"],
+    "operations": ["test", "record"],
+    "defaultContext": {"operation": "test"}
+  },
+  "pdf-anthropic": {
+    "description": "Process and extract data from PDF documents using Claude.",
+    "keywords": ["pdf processing", "extract pdf", "parse pdf"],
+    "operations": ["extract", "analyze"],
+    "defaultContext": {"operation": "extract"}
+  },
+  "pdf-processing-pro": {
+    "description": "Advanced PDF processing with OCR and document analysis.",
+    "keywords": ["pdf ocr", "pdf extraction", "document processing"],
+    "operations": ["extract", "ocr", "analyze"],
+    "defaultContext": {"operation": "extract"}
+  },
+  "docx": {
+    "description": "Process and generate Microsoft Word documents.",
+    "keywords": ["word document", "docx", "document generation"],
+    "operations": ["read", "generate", "convert"],
+    "defaultContext": {"operation": "read"}
+  },
+  "xlsx": {
+    "description": "Process Excel files with data analysis and transformation.",
+    "keywords": ["excel", "xlsx", "spreadsheet"],
+    "operations": ["read", "analyze", "transform"],
+    "defaultContext": {"operation": "read"}
+  },
+  "excel-analysis": {
+    "description": "Advanced Excel data analysis and visualization.",
+    "keywords": ["excel analysis", "spreadsheet analysis", "data visualization"],
+    "operations": ["analyze", "visualize"],
+    "defaultContext": {"operation": "analyze"}
+  },
+  "pptx": {
+    "description": "Process and generate PowerPoint presentations.",
+    "keywords": ["powerpoint", "pptx", "presentation"],
+    "operations": ["read", "generate", "convert"],
+    "defaultContext": {"operation": "read"}
+  }
+}
