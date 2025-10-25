@@ -81,3 +81,6 @@ Thumbs.db
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
+
+# Code quality tools
+.codacy/
