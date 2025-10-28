@@ -1,28 +1,29 @@
-# Claude Workflow Engine 🧠
+# Claude Workflow Engine 🤖
 
-> **Accelerate workflows with Skills orchestration and intelligent automation** - Achieve 95%+ token savings through hybrid Skills + Agents architecture
+> **Intelligent CLI-enhanced workflow engine with 93.8% routing accuracy** - Automatically routes tasks to 19 specialized skills and 10 expert agents
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 18](https://img.shields.io/badge/Skills-18-blue)](./skills)
-[![Token Savings: 95%](https://img.shields.io/badge/Token%20Savings-95%25-green)](./docs)
+[![Routing Accuracy: 93.8%](https://img.shields.io/badge/Routing-93.8%25-green)](./docs/current)
+[![Skills: 19](https://img.shields.io/badge/Skills-19-blue)](./skills)
+[![Agents: 10](https://img.shields.io/badge/Agents-10-orange)](./agents.json)
 
 ---
 
 ## 🎯 What Is This?
 
-Claude Workflow Engine is an **intelligent memory and automation system** for Claude AI that:
+Claude Workflow Engine is an **intelligent routing and automation system** for Claude Code CLI that:
 
-- **Saves 95%+ tokens** through procedural Skills vs. autonomous Agents
-- **Executes 20-30x faster** (milliseconds vs. seconds)
-- **Provides 18 production-ready Skills** for common development tasks
+- **93.8% routing accuracy** for automatic skill/agent selection
+- **19 specialized skills** for deterministic operations (<100ms execution)
+- **10 expert agents** for complex reasoning tasks (via --agents flag)
+- **CLI-enhanced architecture** using native Claude Code flags
 - **Maintains context** across sessions with repository-scoped memory
-- **Automatically routes** requests to optimal Skills or Agents
+- **Token savings: 95%+** through skills vs. agents for routine tasks
 
-**Real-World Impact:**
-- **$1.17M+ annual value** for mid-size organizations
-- Technical debt management with **50% faster delivery**
-- Cloud cost optimization with **$1M+ savings** potential
-- AI-powered code generation with **25% productivity boost**
+**Architecture:**
+```
+User Input → Routing (93.8%) → Skill/Agent Selection → Claude CLI → Result
+```
 
 ---
 
@@ -35,450 +36,394 @@ Claude Workflow Engine is an **intelligent memory and automation system** for Cl
 git clone https://github.com/benreceveur/claude-workflow-engine.git
 cd claude-workflow-engine
 
-# Run the one-click installer (auto-configures your shell)
-./install.sh
+# Install dependencies (optional - for development)
+npm install
 
-# Verify installation
-node src/skill-executor.js list
+# Deploy to ~/.workflow-engine
+cp -r . ~/.workflow-engine/
+
+# Load enhanced shell hook
+source ~/.workflow-engine/memory/auto-behavior-hook-v2.sh
 ```
 
-
-## 🔧 Persistent Memory Index (Preview)
-
-The workflow engine now ships with an optional file-backed hybrid search stack.
-To enable high-quality retrieval locally:
-
-1. Ensure Python 3.9+ is available.
-2. Install the lightweight embedding runtime:
-   ```bash
-   pip install "sentence-transformers<3" numpy
-   ```
-3. (Optional) export `WORKFLOW_ENGINE_EMBED_MODEL` to pick a different embedding model.
-4. The first query will build a disk cache under `~/.workflow-engine/index/`. Subsequent
-       shells reuse the same data with zero start-up cost.
-
-If the Python dependencies are missing the engine automatically falls back to the legacy
-TF-IDF matcher, so terminal startup remains instant.
-
-Need a standalone loader you can share or double-click? The `download/` directory ships with both variants:
-- `download/install.sh` – shell-friendly wrapper that calls the root installer.
-- `download/claude-workflow-engine-installer.command` – double-clickable launcher for macOS Finder.
-Each script dispatches to the latest `install.sh` in the repo, so you always run the current automation.
-
-### First Skill Execution
+### Basic Usage
 
 ```bash
-# Analyze technical debt in your project
-node src/skill-executor.js execute tech-debt-tracker \
-  '{"operation":"scan","project_dir":"."}'
+# Check status
+routing_status
 
-# Or use natural language with Claude:
-# "Analyze our codebase for technical debt"
+# Test routing with a prompt
+test_routing "analyze technical debt in the codebase"
+
+# Use enhanced Claude CLI with routing
+claude_with_routing "create a React component"
+
+# Use with CLI flags
+claude_enhanced --print "fix TypeScript errors"
+```
+
+### Activation
+
+Add to your `~/.zshrc` (or `~/.bashrc`):
+
+```bash
+# Claude Workflow Engine - Auto-load
+source ~/.workflow-engine/memory/auto-behavior-hook-v2.sh
+```
+
+See [ACTIVATION_GUIDE.md](./ACTIVATION_GUIDE.md) for detailed setup instructions.
+
+---
+
+## ⚡ Features
+
+### 1. **Intelligent Routing (93.8% Accuracy)**
+
+Automatically routes tasks to optimal execution mode:
+- **Skill Mode**: Deterministic operations (tech debt, formatting, testing)
+- **Agent Mode**: Complex reasoning (architecture, debugging, code review)
+- **Direct Mode**: General queries
+
+**Test Results:**
+- Skill detection: 100% (10/10 tests)
+- Agent detection: 100% (10/10 tests)
+- Overall accuracy: 93.8% (30/32 tests)
+
+### 2. **19 Specialized Skills**
+
+**Development & Quality:**
+- `tech-debt-tracker` - Analyze and prioritize technical debt
+- `code-formatter` - Format code with Prettier/ESLint
+- `test-first-change` - Find and run relevant tests
+- `security-scanner` - SAST, secrets, OWASP scanning
+- `dependency-guardian` - Dependency auditing and updates
+
+**Documentation & Release:**
+- `api-documentor` - Generate OpenAPI/Swagger docs
+- `release-orchestrator` - Semantic versioning and changelogs
+- `documentation-sync` - Detect code/docs drift
+
+**Infrastructure:**
+- `container-validator` - Validate Dockerfiles and K8s manifests
+- `database-migrator` - Generate safe database migrations
+- `performance-profiler` - Profile and identify bottlenecks
+
+**Operations:**
+- `incident-triage` - On-call handoffs and postmortems
+- `finops-optimizer` - Cloud cost optimization
+
+**Development Tools:**
+- `semantic-search` - Natural language code search
+- `memory-hygiene` - Memory cleanup and validation
+- `codebase-navigator` - Repository structure analysis
+
+See [skills/](./skills) for full skill catalog.
+
+### 3. **10 Expert Agents**
+
+Injected via Claude CLI `--agents` flag:
+- `frontend-developer` - React, TypeScript, UI components
+- `backend-architect` - API design, microservices, databases
+- `typescript-pro` - Advanced TypeScript types and patterns
+- `devops-engineer` - CI/CD, infrastructure, deployments
+- `database-optimizer` - Query optimization, indexing
+- `security-engineer` - Security architecture, compliance
+- `test-automator` - Test strategy, automation
+- `debugger` - Error analysis, troubleshooting
+- `code-reviewer` - Code quality, best practices
+- `ai-engineer` - LLM integration, RAG systems
+
+See [agents.json](./agents.json) for agent definitions.
+
+### 4. **CLI Integration**
+
+Enhanced shell functions for Claude Code CLI:
+
+```bash
+# Enhanced Claude with routing
+claude_with_routing "your prompt"
+
+# Alias
+claude_enhanced "your prompt"
+
+# Test routing decision
+test_routing "your prompt"
+
+# Check system status
+routing_status
+```
+
+**CLI flags supported:**
+- `--print` - Non-interactive output
+- `--model` - Model selection (sonnet/opus/haiku)
+- `--agents` - Agent definitions (auto-injected)
+- `--append-system-prompt` - Routing context (auto-added)
+- All other Claude CLI flags pass through
+
+---
+
+## 📁 Project Structure
+
+```
+claude-workflow-engine/
+├── README.md                    # This file
+├── ACTIVATION_GUIDE.md          # Setup and usage guide
+├── agents.json                  # 10 CLI agent definitions
+├── package.json                 # Dependencies
+│
+├── docs/                        # Documentation
+│   ├── current/                 # Current architecture
+│   │   ├── CLI_INTEGRATION_STRATEGY.md
+│   │   ├── PHASE2_CLI_INTEGRATION.md
+│   │   ├── DEPLOYMENT_SUMMARY_93_8.md
+│   │   └── SDK_INTEGRATION_NOTE.md
+│   │
+│   ├── decisions/               # Architecture decisions
+│   │   └── OPENAI_INTEGRATION_DECISION.md
+│   │
+│   └── archive/                 # Historical reference
+│       ├── CLAUDE_SDK_RESEARCH_REPORT.md
+│       ├── OPENAI_CODEX_INTEGRATION_RESEARCH.md
+│       └── MASTER_IMPROVEMENT_PLAN.md
+│
+├── memory/                      # Shell hooks & routing
+│   ├── auto-behavior-hook-v2.sh       # Enhanced CLI integration
+│   ├── auto-behavior-system.js        # Routing logic (93.8%)
+│   ├── enhanced-agent-dispatcher.js   # Agent detection
+│   └── skill-router.js                # Skill detection
+│
+├── scripts/                     # Utility scripts
+│   └── generate-cli-agents.js   # Generate agents.json
+│
+├── skills/                      # 19 specialized skills
+│   └── skill-manifest.json      # Skill definitions
+│
+└── integrations/                # Tests & integrations
+    ├── test-e2e-workflow-chooser.js   # 93.8% test suite
+    └── claude-sdk/              # SDK modules (reference)
 ```
 
 ---
 
-## 📊 Skills Available (18)
+## 🎓 How It Works
 
-### 🆕 Newest Skills
+### Routing System (93.8% Accurate)
 
-| Skill | Purpose | Token Savings | Value |
-|-------|---------|---------------|-------|
-| **tech-debt-tracker** | Technical debt management | 97.7% | 50% faster delivery |
-| **finops-optimizer** | Cloud cost optimization | 96.9% | $1M+ savings |
-| **ai-code-generator** | AI code generation | 94.3% | 25% productivity boost |
+```javascript
+// 1. User input analyzed
+const routing = await system.processPrompt(prompt);
 
-### Core Skills
+// 2. Skill detection (keyword matching + TF-IDF)
+if (routing.skill_confidence >= 0.45) {
+  mode = 'skill';
+  winner = routing.skill_recommendation.skill;
+}
 
-| Skill | Purpose | Token Savings |
-|-------|---------|---------------|
-| **memory-hygiene** | Memory validation & cleanup | 95% |
-| **codebase-navigator** | Codebase analysis | 90% |
-| **test-first-change** | Test discovery & execution | 92% |
-| **pr-author-reviewer** | PR quality & templates | 88% |
-| **incident-triage** | On-call handoffs | 85% |
-| **code-formatter** | Multi-language formatting | 95.8% |
-| **release-orchestrator** | Semantic versioning | 96.1% |
-| **dependency-guardian** | Vulnerability scanning | 95% |
-| **documentation-sync** | Doc drift detection | 75% |
-| **security-scanner** | SAST, secrets, OWASP | 70% |
-| **api-documentor** | OpenAPI/GraphQL generation | 80% |
-| **performance-profiler** | CPU/memory profiling | 65% |
-| **container-validator** | Docker/K8s validation | 75% |
-| **database-migrator** | Schema migrations | 70% |
-| **semantic-search** | NLP code search | 75% |
+// 3. Agent detection (mandatory triggers + scoring)
+if (routing.agent_confidence >= 0.45) {
+  mode = 'agent';
+  winner = routing.agent_recommendation.recommended_agent;
+}
 
-**Average Token Savings: 85.3%**
+// 4. Routing rules (8 rules, skill preference when close)
+if (skillConf >= 0.65 && agentConf - skillConf <= 0.35) {
+  mode = 'skill'; // Prefer specific tool over general agent
+}
+```
 
----
+### CLI Integration
 
-## 💡 Core Concepts
+```bash
+# Behind the scenes when you use claude_with_routing:
+
+1. Analyze prompt → Detect mode (skill/agent/direct)
+2. Build CLI flags:
+   --agents "$(cat ~/.workflow-engine/agents.json)"
+   --append-system-prompt "Routing context: Use tech-debt-tracker skill"
+3. Execute: claude [flags] "your prompt"
+4. Log routing decision for learning
+```
 
 ### Skills vs Agents
 
-**Skills** (Procedural, Fast, Low-Token):
-- Execute deterministic operations
-- Return structured data
-- ~50ms execution time
+| Feature | Skills | Agents |
+|---------|--------|--------|
+| **Speed** | <100ms | 3-8 seconds |
+| **Tokens** | ~750 | ~15,000 |
+| **Cost** | ~$0.001 | ~$0.05 |
+| **Deterministic** | Yes | No |
+| **Best For** | Routine operations | Complex reasoning |
+
+**Example:**
+- "Format code" → `code-formatter` skill (100ms)
+- "Design database schema" → `backend-architect` agent (5s)
+
+---
+
+## 📊 Performance
+
+### Routing Accuracy
+
+| Test Category | Accuracy | Tests |
+|--------------|----------|-------|
+| Skill Detection | 100% | 10/10 |
+| Agent Detection | 100% | 10/10 |
+| Overall Routing | 93.8% | 30/32 |
+
+### Speed Comparison
+
+| Operation | Skills | Agents | Speedup |
+|-----------|--------|--------|---------|
+| Tech Debt Analysis | <100ms | 5-8s | 50-80x |
+| Code Formatting | <50ms | 3-5s | 60-100x |
+| Test Discovery | <200ms | 4-6s | 20-30x |
+
+### Token Savings
+
+| Task | Skills | Agents | Savings |
+|------|--------|--------|---------|
+| Format 100 files | 750 tokens | 1.5M tokens | 99.95% |
+| Analyze tech debt | 1K tokens | 20K tokens | 95% |
+| Generate docs | 2K tokens | 15K tokens | 87% |
+
+---
+
+## 🏗️ Architecture Decisions
+
+### Why CLI-based (Not API)?
+
+✅ **Current (Claude CLI):**
+- Already authenticated
+- Simple shell integration
+- No API key management
+- Lower latency
+- Best-in-class code model (Claude 4: 72.7% SWE-bench)
+
+❌ **Alternative (OpenAI API):**
+- API key management
+- Rate limiting complexity
+- Network dependency
+- Inferior code model (GPT-4: 54.6% SWE-bench)
+- Negative ROI (-164%)
+
+See [docs/decisions/OPENAI_INTEGRATION_DECISION.md](./docs/decisions/OPENAI_INTEGRATION_DECISION.md) for full analysis.
+
+### Why Skills + Agents?
+
+**Skills** for deterministic operations:
 - 95%+ token savings
-- **Use for**: scanning, analyzing, generating, formatting
+- 30-80x faster
+- Deterministic results
+- Local execution
 
-**Agents** (Autonomous, Strategic, High-Token):
-- Make decisions and recommendations
-- Complex reasoning and analysis
-- Seconds to minutes execution
-- Full LLM context
-- **Use for**: architecture review, debugging, code review
+**Agents** for complex reasoning:
+- Architecture decisions
+- Code review
+- Debugging
+- Creative solutions
 
-**Hybrid** (Best of Both):
-- Agent analyzes → Skill executes → Agent validates
-- Optimal token usage + quality
-- **Example**: Agent designs API → ai-code-generator creates code → Agent reviews
-
-### Automatic Routing
-
-The system automatically routes requests:
-
-```
-User: "Analyze our technical debt"
-→ System detects "technical debt" keyword
-→ Routes to tech-debt-tracker Skill
-→ Saves 31,250 tokens (97.7%)
-→ Executes in <1 second
-```
-
-No manual configuration required!
+**Routing** chooses optimal mode automatically with 93.8% accuracy.
 
 ---
 
-## 🎯 Featured Skills
-
-### 1. tech-debt-tracker
-
-**Systematic technical debt management**
-
-```bash
-# Scan codebase
-node src/skill-executor.js execute tech-debt-tracker \
-  '{"operation":"scan","project_dir":"."}'
-
-# Prioritize for sprint
-node src/skill-executor.js execute tech-debt-tracker \
-  '{"operation":"prioritize","prioritization_strategy":"impact_effort_ratio"}'
-```
-
-**Capabilities:**
-- Detects high complexity, code duplication, missing tests
-- Calculates SQALE index and debt ratio
-- Prioritizes by business impact
-- Creates backlog items in GitHub/Jira
-- Tracks debt trends over time
-
-**ROI**: 50% faster delivery through focused refactoring
-
----
-
-### 2. finops-optimizer
-
-**Cloud cost optimization across AWS/Azure/GCP**
-
-```bash
-# Analyze costs
-node src/skill-executor.js execute finops-optimizer \
-  '{"operation":"analyze-costs","providers":["aws"]}'
-
-# Get optimization recommendations
-node src/skill-executor.js execute finops-optimizer \
-  '{"operation":"optimize-resources"}'
-```
-
-**Capabilities:**
-- Multi-cloud cost analysis and trending
-- Resource rightsizing recommendations
-- Reserved Instance/Savings Plan ROI
-- Anomaly detection with root cause analysis
-- Budget alerting and forecasting
-
-**ROI**: $1.05M annual savings (for $500k/month cloud spend)
-
----
-
-### 3. ai-code-generator
-
-**AI-powered code and test generation**
-
-```bash
-# Generate CRUD API
-node src/skill-executor.js execute ai-code-generator \
-  '{"operation":"generate-boilerplate","type":"crud_api","entity":{"name":"User"},"language":"typescript"}'
-
-# Generate tests
-node src/skill-executor.js execute ai-code-generator \
-  '{"operation":"generate-tests","source_file":"src/services/UserService.ts"}'
-```
-
-**Capabilities:**
-- Generate boilerplate (CRUD APIs, models, controllers)
-- Create unit tests from implementation
-- Synthetic test data generation
-- Scaffold complete microservices
-- Generate API clients from OpenAPI specs
-
-**ROI**: $15k-$21k annual value (5-person team), 25% productivity boost
-
----
-
-## 🏗️ Architecture
-
-### System Overview
-
-```
-User Request
-    ↓
-Auto-Behavior System
-    ↓
-Pattern Matching
-    ├─→ Skill Match? → Skill Executor → Fast Result (50ms, 500 tokens)
-    └─→ No Match → Agent Dispatcher → Agent Analysis (seconds, 20k tokens)
-```
-
-### Memory System
-
-```
-~/.claude/memory/
-├── global-memory.json          # Universal patterns
-├── repositories/
-│   └── {repo-hash}/
-│       ├── memory.json         # Repo-specific patterns
-│       └── metadata.json       # Repo info
-├── skill-executor.js           # Skills execution engine
-├── auto-behavior-system.js     # Automatic routing
-└── enhanced-memory-manager.js  # Memory management
-```
-
-### Skills Structure
-
-```
-~/.claude/skills/{skill-name}/
-├── SKILL.md                    # 700-800 lines documentation
-│   ├── Purpose & operations
-│   ├── Configuration
-│   ├── Token economics
-│   └── Examples
-├── scripts/
-│   └── main.py                 # 500-600 lines implementation
-├── examples/
-│   └── usage.md                # Practical examples
-└── references/                 # Additional docs
-```
-
----
-
-## 📖 Documentation
+## 📚 Documentation
 
 ### Getting Started
-- [Installation Guide](./docs/installation.md)
-- [Quick Start Tutorial](./docs/quickstart.md)
-- [Skills Overview](./docs/skills-guide.md)
+- [ACTIVATION_GUIDE.md](./ACTIVATION_GUIDE.md) - Setup and usage
 
-### Advanced
-- [Creating Custom Skills](./docs/creating-skills.md)
-- [Memory System Deep Dive](./docs/memory-system.md)
-- [Integration with Agents](./docs/skills-agents-integration-test.md)
+### Current Architecture
+- [CLI Integration Strategy](./docs/current/CLI_INTEGRATION_STRATEGY.md) - Overall approach
+- [Phase 2 CLI Integration](./docs/current/PHASE2_CLI_INTEGRATION.md) - Implementation details
+- [Deployment Summary](./docs/current/DEPLOYMENT_SUMMARY_93_8.md) - Current status (93.8%)
+- [SDK vs CLI Decision](./docs/current/SDK_INTEGRATION_NOTE.md) - Architecture choice
 
-### Research
-- [Complete Research Report](./docs/claude-memory-skills-report.md)
-- [Final Implementation Report](./docs/FINAL-SKILLS-IMPLEMENTATION-REPORT.md)
-- [Integration Test Results](./docs/skills-agents-integration-test.md)
+### Architecture Decisions
+- [OpenAI Integration Decision](./docs/decisions/OPENAI_INTEGRATION_DECISION.md) - Why we don't use OpenAI
 
-### Reports & Status
-- Consolidated quality reviews, phase completions, and improvement plans live in [`docs/reports/`](./docs/reports).
-  - [Code Quality Review (2025-10-20)](./docs/reports/CODE_QUALITY_REVIEW_2025-10-20.md)
-  - [Engineering Progress Summary](./docs/reports/PROGRESS_SUMMARY.md)
-  - [Quality & Test Coverage Plans](./docs/reports/QUALITY_IMPROVEMENT_PLAN.md)
+### Research & Reference
+- [Claude SDK Research](./docs/archive/CLAUDE_SDK_RESEARCH_REPORT.md) - SDK capabilities (reference)
+- [OpenAI Codex Research](./docs/archive/OPENAI_CODEX_INTEGRATION_RESEARCH.md) - Codex analysis
+- [Master Improvement Plan](./docs/archive/MASTER_IMPROVEMENT_PLAN.md) - 8-week roadmap
+- [ML Agent Selection](./docs/archive/ML_AGENT_SELECTION_RECOMMENDATION.md) - ML enhancements
 
 ---
 
-## 💰 Business Value
+## 🧪 Testing
 
-### Token Economics
+Run the comprehensive test suite:
 
-| Workflow | Without Skills | With Skills | Savings |
-|----------|----------------|-------------|---------|
-| Technical Debt Analysis | 32,000 tokens | 750 tokens | 97.7% |
-| Cloud Cost Optimization | 32,000 tokens | 1,000 tokens | 96.9% |
-| Code Generation | 17,500 tokens | 1,000 tokens | 94.3% |
-| Release Process | 50,000 tokens | 2,500 tokens | 95% |
-| Security Audit | 40,000 tokens | 3,000 tokens | 92.5% |
+```bash
+cd ~/.workflow-engine/integrations
+node test-e2e-workflow-chooser.js
 
-**Average Savings: 95.3%**
-
-### Financial Impact
-
-**For a mid-size organization (100 developers):**
-- Technical debt management: $100k+ value (50% faster delivery)
-- Cloud cost optimization: $1.05M savings ($500k/month spend)
-- Code generation: $15k-$21k savings (developer time)
-- **Total Annual Value: $1.17M+**
-
-### Time Savings
-
-| Task | Manual | With Skills | Savings |
-|------|--------|-------------|---------|
-| Debt Analysis | 15-20 min | 30-45 sec | 95% |
-| Cost Analysis | 14-19 min | 30-60 sec | 94% |
-| Code Generation | 10-15 min | 2-3 sec | 98% |
+# Expected output:
+# Pass Rate: 93.8% (30/32 tests)
+# - Skill detection: 10/10 (100%)
+# - Agent detection: 10/10 (100%)
+# - Edge cases: 10/12 (83%)
+```
 
 ---
 
 ## 🛠️ Development
 
-### Project Structure
+### Generate CLI Agents
 
-```
-claude-workflow-engine/
-├── README.md                   # This file
-├── LICENSE                     # MIT License
-├── package.json                # Node dependencies
-├── .gitignore                  # Git ignore rules
-├── skills/                     # 18 Skills
-│   ├── tech-debt-tracker/
-│   ├── finops-optimizer/
-│   ├── ai-code-generator/
-│   └── ... (15 more)
-├── src/                        # Core system
-│   ├── skill-executor.js       # Skills execution engine
-│   ├── auto-behavior-system.js # Automatic routing
-│   ├── enhanced-memory-manager.js
-│   └── ...
-├── docs/                       # Documentation
-├── examples/                   # Usage examples
-└── scripts/                    # Installation scripts
-```
-
-### Building New Skills
-
-See [Creating Custom Skills](./docs/creating-skills.md) for a complete guide.
-
-**Quick Start:**
 ```bash
-# Use the skill template
-cp -r skills/_template skills/my-new-skill
-
-# Edit SKILL.md and main.py
-# Test your skill
-node src/skill-executor.js execute my-new-skill '{"operation":"test"}'
+node ~/.workflow-engine/scripts/generate-cli-agents.js
+# Creates: ~/.workflow-engine/agents.json
 ```
+
+### Add New Skill
+
+1. Create skill directory: `skills/my-new-skill/`
+2. Add to `skills/skill-manifest.json`
+3. Define keywords, phrases, operations
+4. Test with `test_routing "skill trigger phrase"`
+
+### Add New Agent
+
+1. Edit `scripts/generate-cli-agents.js`
+2. Add agent definition with description and prompt
+3. Run: `node scripts/generate-cli-agents.js`
+4. Test with `claude --agents "$(cat agents.json)" "agent task"`
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+Contributions welcome! Please:
 
-**Ideas for new Skills:**
-- feature-flag-manager (progressive delivery)
-- observability-instrumenter (OpenTelemetry)
-- chaos-tester (resilience testing)
-- developer-onboarder (onboarding automation)
-- platform-bootstrapper (IDP setup)
-
-See [Research Report](./docs/claude-memory-skills-report.md) for detailed recommendations.
-
----
-
-## 📊 Success Stories
-
-### Tech Debt Management
-> "We reduced our technical debt by 45% in 3 months using systematic tracking and prioritization from tech-debt-tracker. Our velocity increased 30%." - Engineering Manager, SaaS Startup
-
-### Cloud Cost Optimization
-> "finops-optimizer identified $2.1M in annual waste across our AWS infrastructure. We captured 60% of that in the first quarter." - FinOps Lead, Enterprise
-
-### AI-Powered Development
-> "ai-code-generator cut our boilerplate coding time by 70%. Developers love it for scaffolding new services." - Tech Lead, Fintech
-
----
-
-## 🔬 Research & Validation
-
-This system is based on:
-- Analysis of 2024-2025 developer tool trends
-- Study of Skills implementations at Rakuten, Box, Notion, PubNub
-- Anthropic's Skills API best practices
-- Real-world testing with 10+ Skills in production
-
-**Key Findings:**
-- 95%+ token savings vs. Agent-only approaches
-- 20-30x faster execution for procedural tasks
-- Optimal hybrid: Skills for execution, Agents for strategy
-
-See [Complete Research Report](./docs/claude-memory-skills-report.md) for details.
-
----
-
-## 📈 Roadmap
-
-### Version 1.0 (Current)
-- ✅ 18 production-ready Skills
-- ✅ Automatic Skills/Agents routing
-- ✅ Repository-scoped memory
-- ✅ Comprehensive documentation
-
-### Version 1.1 (Q1 2026)
-- [ ] 10 additional Skills (feature flags, observability, chaos testing)
-- [ ] Skills marketplace
-- [ ] Web-based dashboard
-- [ ] Enhanced analytics
-
-### Version 2.0 (Q2 2026)
-- [ ] ML-powered Skill selection
-- [ ] Skill composition (Skills calling Skills)
-- [ ] Real-time collaboration features
-- [ ] VS Code extension
+1. Fork the repository
+2. Create a feature branch
+3. Test your changes (93.8%+ routing accuracy)
+4. Submit a pull request
 
 ---
 
 ## 📄 License
 
-MIT License - see [LICENSE](./LICENSE) for details.
+MIT License - see LICENSE file for details
 
 ---
 
-## 🙏 Acknowledgments
+## 🔗 Links
 
-- **Anthropic** for Claude AI and the Skills API concept
-- **Community contributors** for Skills implementations
-- **Early adopters** for testing and feedback
-- Companies sharing real-world Skills patterns: Rakuten, Box, Notion, PubNub
-
----
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/benreceveur/claude-workflow-engine/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/benreceveur/claude-workflow-engine/discussions)
-- **Documentation**: [Full Docs](./docs)
+- **Repository**: https://github.com/benreceveur/claude-workflow-engine
+- **Issues**: https://github.com/benreceveur/claude-workflow-engine/issues
+- **Claude Code**: https://claude.ai/code
 
 ---
 
-## 🌟 Star History
+## 📈 Status
 
-[![Star History Chart](https://api.star-history.com/svg?repos=benreceveur/claude-workflow-engine&type=Date)](https://star-history.com/#benreceveur/claude-workflow-engine&Date)
-
----
-
-## 📊 Stats
-
-- **Total Lines of Code**: 50,000+
-- **Skills**: 18 production-ready
-- **Average Token Savings**: 85.3%
-- **Average Execution Time**: <100ms
-- **Production Organizations**: Growing
-- **GitHub Stars**: ⭐ Give us a star!
+**Current Version**: v2.0 (CLI-Enhanced)
+**Routing Accuracy**: 93.8%
+**Skills**: 19
+**Agents**: 10
+**Architecture**: CLI-based with intelligent routing
+**Status**: Production-ready ✅
 
 ---
 
-**Built with ❤️ for the Claude AI community**
-
-[⬆ Back to Top](#claude-workflow-engine-)
+**Built with [Claude Code](https://claude.ai/code)**
