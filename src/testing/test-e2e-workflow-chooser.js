@@ -482,7 +482,7 @@ class WorkflowChooserE2ETests {
         this.results.total++;
 
         try {
-            const analysis = await this.analyzer.analyze(test.prompt, {});
+            const _analysis = await this.analyzer.analyze(test.prompt, {});
 
             if (test.expectError) {
                 this.recordTest(test.name, 'FAIL', '✗ Should have thrown error');

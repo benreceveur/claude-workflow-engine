@@ -208,7 +208,7 @@ class SystemDiscovery {
 
       // Find category
       let category = null;
-      for (const [catName, catData] of Object.entries(categories)) {
+      for (const [_catName, catData] of Object.entries(categories)) {
         if (catData.agents.includes(agent.name)) {
           category = catData;
           break;
