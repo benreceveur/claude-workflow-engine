@@ -11,6 +11,14 @@ const path = require('path');
 const { getMemoryDir } = require('./utils/runtime-paths.js');
 const SkillRouter = require('./skill-router.js');
 
+// Phase 4: Task Classifier Integration
+let TaskClassifier = null;
+try {
+    TaskClassifier = require('../integrations/task-classifier.js');
+} catch (error) {
+    // Task classifier not available
+}
+
 class AutoBehaviorSystemWithSkills {
     constructor() {
         this.memoryDir = getMemoryDir();
@@ -20,6 +28,7 @@ class AutoBehaviorSystemWithSkills {
         this.memoryManager = null;
         this.skillExecutor = null;
         this.skillRouter = null;
+        this.taskClassifier = null;  // Phase 4
         this.initializeIntegrations();
     }
 
@@ -30,8 +39,8 @@ class AutoBehaviorSystemWithSkills {
             enableProactiveSuggestions: true,
             enableSkillsOrchestration: true,      // NEW
             enableStrictMode: false,
-            confidenceThreshold: 0.7,
-            skillConfidenceThreshold: 0.8,        // NEW
+            confidenceThreshold: 0.45,            // PHASE 3: Tuned from 0.5 to 0.45 for better agent detection
+            skillConfidenceThreshold: 0.45,       // PHASE 3: Balanced to match agent threshold for fair competition
             memoryContextLimit: 6,
             memorySummarySections: 3,
             mandatoryAgents: true,
@@ -83,6 +92,15 @@ class AutoBehaviorSystemWithSkills {
         } catch (error) {
             console.warn('Skill executor not available');
         }
+
+        // Phase 4: Initialize Task Classifier
+        if (TaskClassifier) {
+            try {
+                this.taskClassifier = new TaskClassifier({ debug: false });
+            } catch (error) {
+                console.warn('Task classifier initialization failed:', error.message);
+            }
+        }
     }
 
     async processPrompt(userInput, context = {}) {
@@ -91,10 +109,11 @@ class AutoBehaviorSystemWithSkills {
             context: context,
             timestamp: new Date().toISOString(),
             memory_context: null,
-            skill_recommendation: null,       // NEW
+            task_classification: null,        // Phase 4: Task Classifier result
+            skill_recommendation: null,
             agent_recommendation: null,
-            execution_mode: 'direct',         // NEW: 'skill', 'agent', 'hybrid', 'direct'
-            available_skills: [],             // NEW
+            execution_mode: 'direct',         // 'skill', 'agent', 'hybrid', 'direct'
+            available_skills: [],
             behavior_enforcement: [],
             final_instructions: []
         };
@@ -125,21 +144,22 @@ class AutoBehaviorSystemWithSkills {
             }
         }
 
-        // NEW: Check for Skill match first (most efficient)
-        if (this.config.enableSkillsOrchestration && this.skillRouter) {
-            processing.skill_recommendation = await this.checkForSkill(userInput, context);
-
-            if (processing.skill_recommendation &&
-                processing.skill_recommendation.confidence >= this.config.skillConfidenceThreshold) {
-                // High confidence Skill match - use Skill directly
-                processing.execution_mode = 'skill';
-                processing.final_instructions = this.generateSkillInstructions(processing);
-                this.logInteraction(processing);
-                return processing;
+        // Phase 4: Task Classification (before evaluation)
+        if (this.taskClassifier) {
+            try {
+                processing.task_classification = await this.taskClassifier.classify(userInput, context);
+            } catch (error) {
+                console.warn('Task classification failed:', error.message);
             }
         }
 
-        // Get agent recommendation if no Skill match
+        // PHASE 3: Parallel evaluation - check BOTH skills and agents
+        // Check for Skill match
+        if (this.config.enableSkillsOrchestration && this.skillRouter) {
+            processing.skill_recommendation = await this.checkForSkill(userInput, context);
+        }
+
+        // Check for Agent match (always check, don't skip)
         if (this.config.enableAutoDispatch && this.agentDispatcher) {
             try {
                 processing.agent_recommendation = await this.agentDispatcher.dispatch(userInput, context);
@@ -148,12 +168,13 @@ class AutoBehaviorSystemWithSkills {
                 if (this.skillExecutor) {
                     processing.available_skills = this.skillExecutor.listSkills();
                 }
-
-                processing.execution_mode = 'agent';
             } catch (error) {
                 console.warn('Failed to get agent recommendation:', error);
             }
         }
+
+        // PHASE 3 + 4: Intelligent routing decision with task classification
+        processing.execution_mode = this.makeRoutingDecision(processing);
 
         // Apply behavior enforcement rules
         processing.behavior_enforcement = this.applyBehaviorRules(userInput, processing);
@@ -182,6 +203,83 @@ class AutoBehaviorSystemWithSkills {
             result.reason = result.reason || `Matched ${result.matchedKeywords.length} keywords`;
         }
         return result;
+    }
+
+    /**
+     * PHASE 3 + 4: Intelligent routing decision with task classification
+     * Compare skill and agent recommendations to decide execution mode
+     * Phase 4: Uses task classification as tiebreaker and bias
+     */
+    makeRoutingDecision(processing) {
+        const skillConf = processing.skill_recommendation?.confidence || 0;
+        const agentConf = processing.agent_recommendation?.confidence || 0;
+        const skillAvailable = processing.skill_recommendation?.available || false;
+
+        const skillThreshold = this.config.skillConfidenceThreshold;
+        const agentThreshold = this.config.confidenceThreshold;
+
+        // Phase 4: Get task classification
+        const classification = processing.task_classification;
+        const classifiedAsSkill = classification && classification.type === 'SKILL';
+        const classifiedAsAgent = classification && classification.type === 'AGENT';
+        const classificationConf = classification?.confidence || 0;
+
+        // Rule 1: High confidence skill match and skill is available
+        if (skillConf >= skillThreshold && skillAvailable && skillConf > agentConf) {
+            return 'skill';
+        }
+
+        // Rule 2: High confidence agent match
+        if (agentConf >= agentThreshold && agentConf > skillConf) {
+            return 'agent';
+        }
+
+        // Rule 3: Both above threshold - use skill preference when close, or classification as tiebreaker
+        if (skillConf >= skillThreshold && agentConf >= agentThreshold) {
+            const diff = Math.abs(skillConf - agentConf);
+
+            // Sub-rule 3a: Close match - prefer skill (more specific/automated tool)
+            // Skills with 0.7+ confidence get preference when agent is within 0.25
+            if (diff <= 0.25 && skillConf >= 0.7 && skillAvailable) {
+                return 'skill';
+            }
+
+            // Sub-rule 3b: Very close match - use classification if confident
+            if (diff < 0.2 && classification && classificationConf > 0.7) {
+                return classifiedAsSkill ? 'skill' : 'agent';
+            }
+
+            // Sub-rule 3c: Clear winner
+            return skillConf > agentConf ? 'skill' : 'agent';
+        }
+
+        // Rule 4: Only skill above threshold and available
+        if (skillConf >= skillThreshold && skillAvailable) {
+            return 'skill';
+        }
+
+        // Rule 5: Only agent above threshold
+        if (agentConf >= agentThreshold) {
+            return 'agent';
+        }
+
+        // Rule 6: Neither above threshold - use classification if confident
+        if (classification && classificationConf > 0.7) {
+            if (classifiedAsAgent && agentConf > 0.3) {
+                return 'agent';
+            }
+            if (classifiedAsSkill && skillConf > 0.3 && skillAvailable) {
+                return 'skill';
+            }
+        }
+
+        // Rule 7: Neither above threshold - compare what we have
+        if (agentConf > 0 || skillConf > 0) {
+            return agentConf >= skillConf ? 'agent' : 'direct';
+        }
+
+        // Rule 8: No matches at all
+        return 'direct';
     }
 
     applyBehaviorRules(input, processing) {
