@@ -27,12 +27,16 @@ class EnhancedAgentDispatcher {
     try {
       const RepoAgentIntegrator = require('./integrate-repo-agents.js');
       this.repoIntegrator = new RepoAgentIntegrator();
-    } catch (error) {}
+    } catch (error) {
+      // Optional integration - gracefully degrade if not available
+    }
 
     try {
       const AgentLearningSystem = require('./agent-learning-system.js');
       this.learningSystem = new AgentLearningSystem();
-    } catch (error) {}
+    } catch (error) {
+      // Optional integration - gracefully degrade if not available
+    }
 
     // Phase 2: Initialize historical booster
     if (this.enableHistorical) {

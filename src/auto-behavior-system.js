@@ -224,23 +224,14 @@ class AutoBehaviorSystemWithSkills {
         const classifiedAsAgent = classification && classification.type === 'AGENT';
         const classificationConf = classification?.confidence || 0;
 
-        // Rule 1: High confidence skill match and skill is available
-        if (skillConf >= skillThreshold && skillAvailable && skillConf > agentConf) {
-            return 'skill';
-        }
-
-        // Rule 2: High confidence agent match
-        if (agentConf >= agentThreshold && agentConf > skillConf) {
-            return 'agent';
-        }
-
-        // Rule 3: Both above threshold - use skill preference when close, or classification as tiebreaker
+        // Rule 1: Both above threshold - use skill preference when close, or classification as tiebreaker
+        // This rule must come FIRST to allow skills to compete when close
         if (skillConf >= skillThreshold && agentConf >= agentThreshold) {
             const diff = Math.abs(skillConf - agentConf);
 
             // Sub-rule 3a: Close match - prefer skill (more specific/automated tool)
-            // Skills with 0.7+ confidence get preference when agent is within 0.25
-            if (diff <= 0.25 && skillConf >= 0.7 && skillAvailable) {
+            // Skills with 0.65+ confidence get preference when agent is within 0.35
+            if (diff <= 0.35 && skillConf >= 0.65 && skillAvailable) {
                 return 'skill';
             }
 
@@ -249,8 +240,18 @@ class AutoBehaviorSystemWithSkills {
                 return classifiedAsSkill ? 'skill' : 'agent';
             }
 
-            // Sub-rule 3c: Clear winner
+            // Sub-rule 1c: Clear winner
             return skillConf > agentConf ? 'skill' : 'agent';
+        }
+
+        // Rule 2: High confidence skill match and skill is available
+        if (skillConf >= skillThreshold && skillAvailable && skillConf > agentConf) {
+            return 'skill';
+        }
+
+        // Rule 3: High confidence agent match
+        if (agentConf >= agentThreshold && agentConf > skillConf) {
+            return 'agent';
         }
 
         // Rule 4: Only skill above threshold and available
