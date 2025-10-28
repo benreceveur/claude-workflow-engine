@@ -1,0 +1,451 @@
+{
+  "skills": {
+    "total": 18,
+    "passed": 11,
+    "failed": 7,
+    "tests": [
+      {
+        "name": "ai-code-generator",
+        "status": "passed",
+        "time": 168,
+        "result": {
+          "success": true,
+          "files_generated": [],
+          "summary": {
+            "total_files": 0,
+            "total_lines_of_code": 0,
+            "estimated_manual_time": "4-6 hours",
+            "generation_time": "2.3 seconds",
+            "time_saved": "3.5-5.5 hours"
+          },
+          "next_steps": [
+            "Review generated code for business logic requirements",
+            "Add custom validation rules if needed",
+            "Configure database connection",
+            "Run migrations",
+            "Write integration tests"
+          ]
+        }
+      },
+      {
+        "name": "api-documentor",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute api-documentor '{\"operation\":\"generate\",\"spec_type\":\"openapi\",\"api_info\":{\"name\":\"Test API\",\"version\":\"1.0.0\"}}'"
+      },
+      {
+        "name": "code-formatter",
+        "status": "passed",
+        "time": 2785,
+        "result": {
+          "success": true,
+          "operation": "format",
+          "check_only": false,
+          "target": ".",
+          "summary": {
+            "total_files": 2838,
+            "formatted": 0,
+            "linted": 0,
+            "changes": 0,
+            "errors": 2838
+          },
+          "by_language": {
+            "javascript": 2838
+          },
+          "details": [
+            {
+              "file": "test-skill-detection.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "test-all-skills-agents.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "test-e2e-integration.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "test-execution-e2e.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/queue-microtask/index.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/is-plain-obj/index.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/callsites/index.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/preload-list-env.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/generate-require.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/preload-list.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/index.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/hook-spawn.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/internal-preload-module.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/process-node-options.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/node-preload/preload-path/node-preload.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/test-exclude/is-outside-dir-posix.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/test-exclude/index.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/test-exclude/is-outside-dir.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/test-exclude/is-outside-dir-win32.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            },
+            {
+              "file": "node_modules/test-exclude/node_modules/glob/sync.js",
+              "language": "javascript",
+              "formatted": false,
+              "linted": false,
+              "errors": [
+                "prettier not found. Install it to enable formatting."
+              ],
+              "changes": 0
+            }
+          ]
+        }
+      },
+      {
+        "name": "codebase-navigator",
+        "status": "passed",
+        "time": 118,
+        "result": {
+          "success": true,
+          "repository": "/Users/llmlite/Documents/GitHub/claude-workflow-engine",
+          "entry_points": [
+            "skills/ai-code-generator/scripts/main.py",
+            "skills/container-validator/scripts/main.py",
+            "skills/finops-optimizer/scripts/main.py",
+            "node_modules/queue-microtask/index.js",
+            "node_modules/is-plain-obj/index.js",
+            "node_modules/callsites/index.js"
+          ],
+          "key_files": [
+            "README.md",
+            "docs/"
+          ]
+        }
+      },
+      {
+        "name": "container-validator",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute container-validator '{\"operation\":\"validate\",\"dockerfile\":\"FROM node:18\\nRUN echo \\\"test\\\"\"}'"
+      },
+      {
+        "name": "database-migrator",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute database-migrator '{\"operation\":\"generate\",\"database\":\"postgresql\",\"migration_type\":\"create_table\"}'"
+      },
+      {
+        "name": "dependency-guardian",
+        "status": "passed",
+        "time": 30,
+        "result": {
+          "success": true,
+          "project_type": "npm",
+          "dependencies": {
+            "production": 0,
+            "development": 5,
+            "total": 5
+          },
+          "depth": {
+            "direct": 5,
+            "transitive": 0,
+            "max_depth": 0
+          },
+          "size": {
+            "total_mb": 0,
+            "largest": []
+          },
+          "operation": "audit"
+        }
+      },
+      {
+        "name": "documentation-sync",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute documentation-sync '{\"operation\":\"analyze\",\"docs_path\":\"./docs\"}'"
+      },
+      {
+        "name": "finops-optimizer",
+        "status": "passed",
+        "time": 41,
+        "result": {
+          "success": false,
+          "error": "Unknown operation: analyze"
+        }
+      },
+      {
+        "name": "incident-triage",
+        "status": "passed",
+        "time": 64,
+        "result": {
+          "success": true,
+          "incident_id": "INC-20251027-1945",
+          "severity": "P2",
+          "ttl": "2025-11-26T19:45:45.160896Z"
+        }
+      },
+      {
+        "name": "memory-hygiene",
+        "status": "passed",
+        "time": 27,
+        "result": {
+          "error": "Unknown operation: cleanup",
+          "success": true,
+          "operation": "cleanup"
+        }
+      },
+      {
+        "name": "performance-profiler",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute performance-profiler '{\"operation\":\"profile\",\"target\":\"cpu\"}'"
+      },
+      {
+        "name": "pr-author-reviewer",
+        "status": "passed",
+        "time": 27,
+        "result": {
+          "success": true,
+          "pr_template": "Generated PR template",
+          "checks": [
+            "security",
+            "tests",
+            "docs"
+          ]
+        }
+      },
+      {
+        "name": "release-orchestrator",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute release-orchestrator '{\"operation\":\"prepare\",\"version\":\"1.0.0\"}'"
+      },
+      {
+        "name": "security-scanner",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/memory/skill-executor.js execute security-scanner '{\"operation\":\"scan\",\"scan_type\":\"sast\"}'"
+      },
+      {
+        "name": "semantic-search",
+        "status": "passed",
+        "time": 30,
+        "result": {
+          "success": true,
+          "operation": "search",
+          "query": "function definition",
+          "results_found": 0,
+          "results": [],
+          "execution_time_ms": 0
+        }
+      },
+      {
+        "name": "tech-debt-tracker",
+        "status": "passed",
+        "time": 41,
+        "result": {
+          "success": false,
+          "error": "Unknown operation: analyze"
+        }
+      },
+      {
+        "name": "test-first-change",
+        "status": "passed",
+        "time": 26,
+        "result": {
+          "success": true,
+          "tests_run": true,
+          "status": "Tests would run here"
+        }
+      }
+    ]
+  },
+  "agents": {
+    "total": 6,
+    "passed": 3,
+    "failed": 3,
+    "tests": [
+      {
+        "name": "frontend-engineer",
+        "status": "passed",
+        "prompt": "create a React component with useState hooks",
+        "detected": true
+      },
+      {
+        "name": "backend-architect",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/integrations/copilot-hook.js \"design a REST API with authentication\""
+      },
+      {
+        "name": "devops-engineer",
+        "status": "passed",
+        "prompt": "setup CI/CD pipeline with Docker and Kubernetes",
+        "detected": true
+      },
+      {
+        "name": "security-engineer",
+        "status": "passed",
+        "prompt": "implement OAuth2 authentication with JWT tokens",
+        "detected": true
+      },
+      {
+        "name": "database-architect",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/integrations/copilot-hook.js \"design database schema for e-commerce platform\""
+      },
+      {
+        "name": "fullstack-developer",
+        "status": "failed",
+        "error": "Command failed: node /Users/llmlite/.workflow-engine/integrations/copilot-hook.js \"build a full-stack application with Next.js and PostgreSQL\""
+      }
+    ]
+  }
+}
