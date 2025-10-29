@@ -1,11 +1,11 @@
 # Claude Workflow Engine 🤖
 
-> **Intelligent CLI-enhanced workflow engine with 93.8% routing accuracy** - Automatically routes tasks to 19 specialized skills and 10 expert agents
+> **Intelligent CLI-enhanced workflow engine with 93.8% routing accuracy** - Automatically routes tasks to 19 specialized skills and 79 expert agents
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Routing Accuracy: 93.8%](https://img.shields.io/badge/Routing-93.8%25-green)](./docs/current)
 [![Skills: 19](https://img.shields.io/badge/Skills-19-blue)](./skills)
-[![Agents: 10](https://img.shields.io/badge/Agents-10-orange)](./agents.json)
+[![Agents: 79](https://img.shields.io/badge/Agents-79-orange)](./src/enhanced-agent-dispatcher.js)
 
 ---
 
@@ -15,7 +15,7 @@ Claude Workflow Engine is an **intelligent routing and automation system** for C
 
 - **93.8% routing accuracy** for automatic skill/agent selection
 - **19 specialized skills** for deterministic operations (<100ms execution)
-- **10 expert agents** for complex reasoning tasks (via --agents flag)
+- **79 expert agents** for complex reasoning tasks (10 for CLI --agents flag, 69 for intelligent routing)
 - **CLI-enhanced architecture** using native Claude Code flags
 - **Maintains context** across sessions with repository-scoped memory
 - **Token savings: 95%+** through skills vs. agents for routine tasks
@@ -119,9 +119,11 @@ Automatically routes tasks to optimal execution mode:
 
 See [skills/](./skills) for full skill catalog.
 
-### 3. **10 Expert Agents**
+### 3. **79 Expert Agents**
 
-Injected via Claude CLI `--agents` flag:
+The system includes **79 specialized agents** for intelligent routing:
+
+**Core CLI Agents (10)** - Available via `--agents` flag:
 - `frontend-developer` - React, TypeScript, UI components
 - `backend-architect` - API design, microservices, databases
 - `typescript-pro` - Advanced TypeScript types and patterns
@@ -133,7 +135,18 @@ Injected via Claude CLI `--agents` flag:
 - `code-reviewer` - Code quality, best practices
 - `ai-engineer` - LLM integration, RAG systems
 
-See [agents.json](./agents.json) for agent definitions.
+**Extended Agent Pool (69 additional)** - Used for intelligent routing:
+- Language specialists (javascript-pro, python-pro, rust-pro, c-pro)
+- DevOps & Infrastructure (cloud-architect, terraform-specialist, network-engineer)
+- Data & Analytics (data-engineer, data-scientist, data-analyst)
+- Security specialists (mcp-security-auditor, penetration-tester, compliance-specialist)
+- Architecture experts (architecture-modernizer, graphql-architect, nextjs-architecture-expert)
+- Research & Documentation (technical-researcher, api-documenter, documentation-sync)
+- Performance & Optimization (performance-engineer, react-performance-optimizer, finops-optimizer)
+- AI/ML specialists (ml-engineer, model-evaluator, prompt-engineer)
+- And many more specialized roles...
+
+See [agents.json](./agents.json) for CLI agents and [enhanced-agent-dispatcher.js](./src/enhanced-agent-dispatcher.js) for all 79 agents.
 
 ### 4. **CLI Integration**
 
@@ -168,7 +181,7 @@ routing_status
 claude-workflow-engine/
 ├── README.md                    # This file
 ├── ACTIVATION_GUIDE.md          # Setup and usage guide
-├── agents.json                  # 10 CLI agent definitions
+├── agents.json                  # 10 CLI agent definitions (for --agents flag)
 ├── package.json                 # Dependencies
 │
 ├── docs/                        # Documentation
@@ -189,7 +202,7 @@ claude-workflow-engine/
 ├── memory/                      # Shell hooks & routing
 │   ├── auto-behavior-hook-v2.sh       # Enhanced CLI integration
 │   ├── auto-behavior-system.js        # Routing logic (93.8%)
-│   ├── enhanced-agent-dispatcher.js   # Agent detection
+│   ├── enhanced-agent-dispatcher.js   # Agent detection (79 agents)
 │   └── skill-router.js                # Skill detection
 │
 ├── scripts/                     # Utility scripts
@@ -420,7 +433,7 @@ MIT License - see LICENSE file for details
 **Current Version**: v2.0 (CLI-Enhanced)
 **Routing Accuracy**: 93.8%
 **Skills**: 19
-**Agents**: 10
+**Agents**: 79 (10 CLI + 69 routing)
 **Architecture**: CLI-based with intelligent routing
 **Status**: Production-ready ✅
 
