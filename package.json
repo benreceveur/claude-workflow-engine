@@ -56,7 +56,7 @@
   },
   "preferGlobal": true,
   "devDependencies": {
-    "mocha": "^10.2.0",
+    "mocha": "^11.7.5",
     "chai": "^4.3.10",
     "sinon": "^17.0.1",
     "nyc": "^15.1.0",
